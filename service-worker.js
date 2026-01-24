@@ -1,15 +1,12 @@
 // Service Worker para modo offline
-const CACHE_NAME = 'portfolio-cache-v1';
+const CACHE_NAME = 'portfolio-cache-v2';
 const urlsToCache = [
     '/',
     '/index.html',
     '/css/styles.css',
     '/js/scripts.js',
-    '/assets/favicon.ico',
-    // Google Fonts
-    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap',
-    // Font Awesome
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
+    '/assets/favicon.ico'
+    // Nota: Recursos externos se cachearán dinámicamente
 ];
 
 // Instalación del Service Worker
@@ -49,7 +46,7 @@ self.addEventListener('activate', (event) => {
     return self.clients.claim();
 });
 
-// Interceptar peticiones (estrategia Cache First)
+// Interceptar peticiones (estrategia Cache First con soporte CORS)
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
@@ -60,28 +57,55 @@ self.addEventListener('fetch', (event) => {
                     return response;
                 }
                 
-                // Si no está en caché, hacer fetch y cachear la respuesta
-                return fetch(event.request)
+                // Si no está en caché, hacer fetch
+                return fetch(event.request.clone())
                     .then((response) => {
                         // Verificar si es una respuesta válida
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                        if (!response || response.status !== 200) {
                             return response;
                         }
                         
-                        // Clonar la respuesta
-                        const responseToCache = response.clone();
+                        // Solo cachear recursos del mismo origen y algunos externos específicos
+                        const shouldCache = 
+                            event.request.url.startsWith(self.location.origin) ||
+                            event.request.url.includes('fonts.googleapis.com') ||
+                            event.request.url.includes('fonts.gstatic.com') ||
+                            event.request.url.includes('cdnjs.cloudflare.com') ||
+                            event.request.url.includes('fa-');
                         
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
+                        if (shouldCache && (response.type === 'basic' || response.type === 'cors')) {
+                            // Clonar la respuesta
+                            const responseToCache = response.clone();
+                            
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    cache.put(event.request, responseToCache);
+                                })
+                                .catch(err => console.log('No se pudo cachear:', event.request.url));
+                        }
                         
                         return response;
                     })
                     .catch((error) => {
-                        console.log('Service Worker: Error en fetch, modo offline:', error);
-                        // Aquí podrías retornar una página offline personalizada
-                        // return caches.match('/offline.html');
+                        console.log('Service Worker: Modo offline, buscando en caché:', event.request.url);
+                        
+                        // Intentar servir desde caché como fallback
+                        return caches.match(event.request)
+                            .then(cachedResponse => {
+                                if (cachedResponse) {
+                                    return cachedResponse;
+                                }
+                                
+                                // Si es una imagen, retornar placeholder
+                                if (event.request.destination === 'image') {
+                                    return new Response(
+                                        '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#f1f5f9"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#64748b">Sin imagen</text></svg>',
+                                        { headers: { 'Content-Type': 'image/svg+xml' } }
+                                    );
+                                }
+                                
+                                throw error;
+                            });
                     });
             })
     );
