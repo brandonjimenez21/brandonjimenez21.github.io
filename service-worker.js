@@ -1,11 +1,12 @@
 // Service Worker para modo offline
-const CACHE_NAME = 'portfolio-cache-v3';
+const CACHE_NAME = 'portfolio-cache-v4';
 const urlsToCache = [
     '/',
     '/index.html',
     '/css/styles.css',
     '/js/scripts.js',
     '/assets/favicon.ico',
+    '/manifest.json',
     '/assets/fonts/fontawesome.min.css',
     '/assets/fonts/fa-solid-900.woff2',
     '/assets/fonts/fa-brands-400.woff2',
