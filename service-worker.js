@@ -1,12 +1,15 @@
 // Service Worker para modo offline
-const CACHE_NAME = 'portfolio-cache-v2';
+const CACHE_NAME = 'portfolio-cache-v3';
 const urlsToCache = [
     '/',
     '/index.html',
     '/css/styles.css',
     '/js/scripts.js',
-    '/assets/favicon.ico'
-    // Nota: Recursos externos se cachearán dinámicamente
+    '/assets/favicon.ico',
+    '/assets/fonts/fontawesome.min.css',
+    '/assets/fonts/fa-solid-900.woff2',
+    '/assets/fonts/fa-brands-400.woff2',
+    '/assets/fonts/fa-regular-400.woff2'
 ];
 
 // Instalación del Service Worker
