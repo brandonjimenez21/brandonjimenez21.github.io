@@ -3,25 +3,32 @@
 // ===================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then((registration) => {
-                console.log('✅ Service Worker registrado:', registration.scope);
-                
-                // Verificar actualizaciones
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    console.log('🔄 Nueva versión del Service Worker encontrada');
+        // Solo registrar en producción (no en localhost/127.0.0.1)
+        const isProduction = !window.location.hostname.match(/localhost|127\.0\.0\.1/);
+        
+        if (isProduction) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('✅ Service Worker registrado:', registration.scope);
                     
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            console.log('📥 Nueva versión disponible. Recarga para actualizar.');
-                        }
+                    // Verificar actualizaciones
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        console.log('🔄 Nueva versión del Service Worker encontrada');
+                        
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('📥 Nueva versión disponible. Recarga para actualizar.');
+                            }
+                        });
                     });
+                })
+                .catch((error) => {
+                    console.error('❌ Error al registrar Service Worker:', error);
                 });
-            })
-            .catch((error) => {
-                console.error('❌ Error al registrar Service Worker:', error);
-            });
+        } else {
+            console.log('🔧 Modo desarrollo - Service Worker deshabilitado');
+        }
     });
     
     // Detectar si está offline
@@ -987,60 +994,118 @@ function validateField(field) {
 // ===================================
 // EASTER EGG - KONAMI CODE STYLE
 // ===================================
-let secretKeys = [];
-const secretCode = ['Control', 'Shift', 'F'];
+let easterEggShown = false;
 
 document.addEventListener('keydown', (e) => {
-    secretKeys.push(e.key);
-    secretKeys = secretKeys.slice(-3);
-    
-    if (secretKeys.join('').toLowerCase() === secretCode.join('').toLowerCase()) {
+    // Detectar Ctrl + Shift + F presionados simultáneamente
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'f' && !easterEggShown) {
+        e.preventDefault(); // Prevenir el comportamiento por defecto (búsqueda del navegador)
+        easterEggShown = true;
         showSecretMessage();
     }
 });
 
 function showSecretMessage() {
-    const message = document.createElement('div');
-    message.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            color: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            z-index: 10000;
-            text-align: center;
-            animation: bounceIn 0.6s ease;
-        ">
-            <h2 style="margin: 0 0 1rem 0; font-size: 2rem;">🎉 ¡Encontraste el secreto! 🎉</h2>
-            <p style="margin: 0; font-size: 1.2rem;">Eres oficialmente un explorador ninja del código 🥷</p>
-            <button onclick="this.parentElement.parentElement.remove()" style="
-                margin-top: 1rem;
-                padding: 0.5rem 1.5rem;
-                background: white;
-                color: #6366f1;
-                border: none;
-                border-radius: 0.5rem;
-                font-weight: bold;
-                cursor: pointer;
-            ">¡Genial!</button>
-        </div>
-        <div onclick="this.remove()" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 9999;
-        "></div>
+    // Crear overlay (fondo oscuro)
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        z-index: 9999;
+        pointer-events: auto;
+        cursor: pointer;
     `;
     
-    document.body.appendChild(message);
+    // Crear contenedor del mensaje
+    const messageBox = document.createElement('div');
+    messageBox.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #6366f1, #ec4899);
+        color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        z-index: 10001;
+        text-align: center;
+        animation: bounceIn 0.6s ease;
+        pointer-events: auto;
+    `;
+    
+    // Crear título
+    const title = document.createElement('h2');
+    title.style.cssText = 'margin: 0 0 1rem 0; font-size: 2rem;';
+    title.textContent = '🎉 ¡Encontraste el secreto! 🎉';
+    
+    // Crear párrafo
+    const text = document.createElement('p');
+    text.style.cssText = 'margin: 0; font-size: 1.2rem;';
+    text.textContent = 'Eres oficialmente un explorador ninja del código 🥷';
+    
+    // Crear botón
+    const button = document.createElement('button');
+    button.style.cssText = `
+        margin-top: 1rem;
+        padding: 0.5rem 1.5rem;
+        background: white;
+        color: #6366f1;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: all 0.3s ease;
+        animation: pulse 2s infinite;
+    `;
+    button.textContent = '¡Genial!';
+    
+    // Añadir efecto hover
+    button.addEventListener('mouseenter', () => {
+        button.style.transform = 'scale(1.1)';
+        button.style.boxShadow = '0 5px 15px rgba(99, 102, 241, 0.4)';
+    });
+    
+    button.addEventListener('mouseleave', () => {
+        button.style.transform = 'scale(1)';
+        button.style.boxShadow = 'none';
+    });
+    
+    // Función para cerrar el modal
+    const closeModal = () => {
+        easterEggShown = false; // Permitir mostrar el easter egg de nuevo
+        overlay.remove();
+        messageBox.remove();
+    };
+    
+    // Event listener del botón (con stopPropagation para evitar conflictos)
+    button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeModal();
+    });
+    
+    // Event listener del overlay (click en fondo oscuro)
+    overlay.addEventListener('click', closeModal);
+    
+    // Prevenir que clicks en el messageBox cierren el modal
+    messageBox.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+    
+    // Ensamblar el modal
+    messageBox.appendChild(title);
+    messageBox.appendChild(text);
+    messageBox.appendChild(button);
+    
+    // Agregar al DOM
+    document.body.appendChild(overlay);
+    document.body.appendChild(messageBox);
+    
     confetti();
 }
 
@@ -1216,11 +1281,399 @@ tiltCards.forEach(card => {
 });
 
 // ===================================
-// DETECCIÓN DE MODO OSCURO DEL SISTEMA
+// FUTURISTIC EFFECTS IMPLEMENTATION
 // ===================================
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    console.log('Modo oscuro detectado');
+
+// 1. STARFIELD ANIMATION
+// ===================================
+const starfieldCanvas = document.getElementById('starfield');
+if (starfieldCanvas) {
+    const starCtx = starfieldCanvas.getContext('2d');
+    let stars = [];
+    const numStars = 200;
+    
+    function resizeStarfield() {
+        starfieldCanvas.width = window.innerWidth;
+        starfieldCanvas.height = window.innerHeight;
+        initStars();
+    }
+    
+    function initStars() {
+        stars = [];
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * starfieldCanvas.width,
+                y: Math.random() * starfieldCanvas.height,
+                z: Math.random() * starfieldCanvas.width,
+                size: Math.random() * 2,
+                speed: Math.random() * 0.5 + 0.1
+            });
+        }
+    }
+    
+    function animateStars() {
+        starCtx.fillStyle = 'rgba(15, 23, 42, 0.1)';
+        starCtx.fillRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
+        
+        const centerX = starfieldCanvas.width / 2;
+        const centerY = starfieldCanvas.height / 2;
+        
+        stars.forEach(star => {
+            star.z -= star.speed;
+            
+            if (star.z <= 0) {
+                star.z = starfieldCanvas.width;
+                star.x = Math.random() * starfieldCanvas.width;
+                star.y = Math.random() * starfieldCanvas.height;
+            }
+            
+            const k = 128 / star.z;
+            const px = (star.x - centerX) * k + centerX;
+            const py = (star.y - centerY) * k + centerY;
+            
+            const size = (1 - star.z / starfieldCanvas.width) * star.size;
+            const opacity = (1 - star.z / starfieldCanvas.width) * 0.8;
+            
+            starCtx.fillStyle = `rgba(99, 102, 241, ${opacity})`;
+            starCtx.beginPath();
+            starCtx.arc(px, py, size, 0, Math.PI * 2);
+            starCtx.fill();
+            
+            // Twinkle effect
+            if (Math.random() > 0.99) {
+                starCtx.fillStyle = `rgba(236, 72, 153, ${opacity})`;
+                starCtx.beginPath();
+                starCtx.arc(px, py, size * 1.5, 0, Math.PI * 2);
+                starCtx.fill();
+            }
+        });
+        
+        requestAnimationFrame(animateStars);
+    }
+    
+    resizeStarfield();
+    window.addEventListener('resize', resizeStarfield);
+    animateStars();
 }
+
+// 2. LAVA LAMP BACKGROUND
+// ===================================
+const blobCanvas = document.getElementById('blobMorph');
+if (blobCanvas) {
+    const blobCtx = blobCanvas.getContext('2d');
+    let lavaBlobs = [];
+    const numLavaBlobs = 5;
+    
+    function resizeBlobCanvas() {
+        blobCanvas.width = window.innerWidth;
+        blobCanvas.height = window.innerHeight;
+        initLavaBlobs();
+    }
+    
+    function initLavaBlobs() {
+        lavaBlobs = [];
+        const colors = [
+            'rgba(99, 102, 241, 0.6)',
+            'rgba(236, 72, 153, 0.6)',
+            'rgba(20, 184, 166, 0.6)',
+            'rgba(139, 92, 246, 0.6)',
+            'rgba(249, 115, 22, 0.6)'
+        ];
+        
+        for (let i = 0; i < numLavaBlobs; i++) {
+            lavaBlobs.push({
+                x: Math.random() * blobCanvas.width,
+                y: blobCanvas.height + Math.random() * 200,
+                radius: Math.random() * 80 + 60,
+                vy: -(Math.random() * 0.5 + 0.4), // Movimiento hacia arriba más rápido
+                vx: (Math.random() - 0.5) * 0.5, // Movimiento horizontal más rápido
+                color: colors[i],
+                phase: Math.random() * Math.PI * 2,
+                wobbleSpeed: Math.random() * 0.03 + 0.02
+            });
+        }
+    }
+    
+    function drawLavaBlob(blob) {
+        const gradient = blobCtx.createRadialGradient(
+            blob.x, blob.y, 0,
+            blob.x, blob.y, blob.radius
+        );
+        gradient.addColorStop(0, blob.color);
+        gradient.addColorStop(0.7, blob.color.replace(/[\d.]+\)$/, '0.3)'));
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        
+        blobCtx.fillStyle = gradient;
+        blobCtx.beginPath();
+        blobCtx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2);
+        blobCtx.fill();
+    }
+    
+    function animateBlobs() {
+        blobCtx.clearRect(0, 0, blobCanvas.width, blobCanvas.height);
+        
+        lavaBlobs.forEach(blob => {
+            // Movimiento vertical (subir)
+            blob.y += blob.vy;
+            
+            // Movimiento horizontal con wobble
+            blob.phase += blob.wobbleSpeed;
+            blob.x += Math.sin(blob.phase) * 0.5 + blob.vx;
+            
+            // Cuando llega arriba, reinicia abajo
+            if (blob.y < -blob.radius - 100) {
+                blob.y = blobCanvas.height + blob.radius;
+                blob.x = Math.random() * blobCanvas.width;
+            }
+            
+            // Mantener dentro de los límites horizontales
+            if (blob.x < -blob.radius) blob.x = blobCanvas.width + blob.radius;
+            if (blob.x > blobCanvas.width + blob.radius) blob.x = -blob.radius;
+            
+            drawLavaBlob(blob);
+        });
+        
+        requestAnimationFrame(animateBlobs);
+    }
+    
+    resizeBlobCanvas();
+    window.addEventListener('resize', resizeBlobCanvas);
+    animateBlobs();
+}
+
+// 3. CURSOR PARTICLES
+// ===================================
+const particleCanvas = document.getElementById('cursorParticles');
+if (particleCanvas) {
+    const pCtx = particleCanvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: 0, y: 0 };
+    
+    function resizeParticleCanvas() {
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
+    }
+    
+    class Particle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = (Math.random() - 0.5) * 2;
+            this.speedY = (Math.random() - 0.5) * 2;
+            this.life = 1;
+            this.decay = Math.random() * 0.01 + 0.005;
+            this.color = `rgba(${99 + Math.random() * 137}, ${102 + Math.random() * 150}, 241, ${this.life})`;
+        }
+        
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.life -= this.decay;
+            this.size *= 0.98;
+        }
+        
+        draw() {
+            pCtx.fillStyle = this.color.replace(/[\d.]+\)$/, `${this.life})`);
+            pCtx.beginPath();
+            pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            pCtx.fill();
+            
+            // Glow effect
+            const gradient = pCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
+            gradient.addColorStop(0, this.color.replace(/[\d.]+\)$/, `${this.life * 0.5})`));
+            gradient.addColorStop(1, this.color.replace(/[\d.]+\)$/, '0)'));
+            pCtx.fillStyle = gradient;
+            pCtx.beginPath();
+            pCtx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+            pCtx.fill();
+        }
+    }
+    
+    function animateParticles() {
+        pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        
+        // Create new particles at mouse position
+        if (particles.length < 100) {
+            particles.push(new Particle(mouse.x, mouse.y));
+        }
+        
+        // Draw connections between nearby particles
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 100) {
+                    const opacity = (1 - distance / 100) * Math.min(particles[i].life, particles[j].life);
+                    pCtx.strokeStyle = `rgba(99, 102, 241, ${opacity * 0.2})`;
+                    pCtx.lineWidth = 0.5;
+                    pCtx.beginPath();
+                    pCtx.moveTo(particles[i].x, particles[i].y);
+                    pCtx.lineTo(particles[j].x, particles[j].y);
+                    pCtx.stroke();
+                }
+            }
+        }
+        
+        particles = particles.filter(particle => {
+            particle.update();
+            particle.draw();
+            return particle.life > 0;
+        });
+        
+        requestAnimationFrame(animateParticles);
+    }
+    
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+    
+    resizeParticleCanvas();
+    window.addEventListener('resize', resizeParticleCanvas);
+    animateParticles();
+}
+
+// 4. EYE FOLLOWING CURSOR
+// ===================================
+const eyeContainer = document.getElementById('eyeFollower');
+if (eyeContainer) {
+    const pupil = eyeContainer.querySelector('.pupil');
+    const eye = eyeContainer.querySelector('.eye');
+    
+    window.addEventListener('mousemove', (e) => {
+        const eyeRect = eye.getBoundingClientRect();
+        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+        
+        // Calcular ángulo desde el centro del ojo al cursor
+        const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
+        
+        // Limitar el movimiento para que no se salga del ojo
+        // El ojo es más ancho que alto, así que limitamos diferente en X y Y
+        const maxDistanceX = eyeRect.width / 8;  // Movimiento horizontal más limitado
+        const maxDistanceY = eyeRect.height / 10; // Movimiento vertical aún más limitado
+        
+        // Calcular desplazamiento con límites diferentes para X e Y
+        let irisX = Math.cos(angle) * maxDistanceX;
+        let irisY = Math.sin(angle) * maxDistanceY;
+        
+        // Asegurar que no se salga (doble verificación)
+        irisX = Math.max(-maxDistanceX, Math.min(maxDistanceX, irisX));
+        irisY = Math.max(-maxDistanceY, Math.min(maxDistanceY, irisY));
+        
+        // Mover todo el conjunto (iris + pupila) juntos
+        pupil.style.transform = `translate(calc(-50% + ${irisX}px), calc(-50% + ${irisY}px))`;
+    });
+    
+    // Función de parpadeo
+    function blink() {
+        eye.classList.add('blinking');
+        setTimeout(() => {
+            eye.classList.remove('blinking');
+        }, 180); // Duración del parpadeo
+    }
+    
+    // Parpadeo aleatorio cada 3-7 segundos
+    function randomBlink() {
+        blink();
+        const nextBlink = Math.random() * 4000 + 3000; // Entre 3 y 7 segundos
+        setTimeout(randomBlink, nextBlink);
+    }
+    
+    // Iniciar parpadeos aleatorios después de 2 segundos
+    setTimeout(randomBlink, 2000);
+}
+
+// 5. SHAKE TO RANDOMIZE THEME
+// ===================================
+let shakeDetectionEnabled = true;
+let lastShakeTime = 0;
+const shakeThreshold = 15;
+let lastX = 0, lastY = 0, lastZ = 0;
+
+if (window.DeviceMotionEvent) {
+    window.addEventListener('devicemotion', (e) => {
+        if (!shakeDetectionEnabled) return;
+        
+        const current = e.accelerationIncludingGravity;
+        if (!current || !current.x) return;
+        
+        const deltaX = Math.abs(current.x - lastX);
+        const deltaY = Math.abs(current.y - lastY);
+        const deltaZ = Math.abs(current.z - lastZ);
+        
+        if ((deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold)) {
+            const now = Date.now();
+            if (now - lastShakeTime > 1000) {
+                lastShakeTime = now;
+                randomizeTheme();
+            }
+        }
+        
+        lastX = current.x;
+        lastY = current.y;
+        lastZ = current.z;
+    });
+}
+
+// Fallback: Triple click to randomize (for desktop)
+let clickCount = 0;
+let clickTimer = null;
+
+document.addEventListener('click', (e) => {
+    clickCount++;
+    console.log(`Click ${clickCount}/3`);
+    
+    if (clickCount === 1) {
+        clickTimer = setTimeout(() => {
+            console.log('Reset click counter');
+            clickCount = 0;
+        }, 500); // Aumentado a 500ms para dar más tiempo
+    } else if (clickCount === 3) {
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        console.log('🎨 Triple click detectado!');
+        randomizeTheme();
+    }
+}, true); // Usar capture phase para asegurar que se ejecute
+
+function randomizeTheme() {
+    const colors = [
+        { primary: '#6366f1', secondary: '#ec4899', accent: '#14b8a6', name: 'Original' },
+        { primary: '#f59e0b', secondary: '#ef4444', accent: '#10b981', name: 'Sunset' },
+        { primary: '#8b5cf6', secondary: '#ec4899', accent: '#06b6d4', name: 'Purple Dream' },
+        { primary: '#14b8a6', secondary: '#06b6d4', accent: '#6366f1', name: 'Ocean' },
+        { primary: '#ef4444', secondary: '#f59e0b', accent: '#ec4899', name: 'Fire' },
+        { primary: '#10b981', secondary: '#14b8a6', accent: '#6366f1', name: 'Forest' }
+    ];
+    
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    
+    document.documentElement.style.setProperty('--primary-color', randomColor.primary);
+    document.documentElement.style.setProperty('--secondary-color', randomColor.secondary);
+    document.documentElement.style.setProperty('--accent-color', randomColor.accent);
+    
+    showNotification(`🎨 Tema cambiado: ${randomColor.name}`);
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'shake-notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideDown 0.5s ease reverse';
+        setTimeout(() => {
+            notification.remove();
+        }, 500);
+    }, 2000);
+}
+
+console.log('✨ Futuristic effects loaded! Shake device or triple-click to randomize theme!');
 
 // ===================================
 // PERFORMANCE: REDUCIR ANIMACIONES
