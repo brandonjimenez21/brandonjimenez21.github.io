@@ -411,6 +411,10 @@ body.dark-mode .theme-toggle i::before {
     transition: var(--transition-normal);
 }
 
+body.dark-mode .nav-toggle span {
+    background: var(--text-primary);
+}
+
 /* ===================================
    HERO SECTION
    =================================== */
@@ -1401,7 +1405,7 @@ body.dark-mode .contact-social a {
         right: -100%;
         width: 100%;
         height: calc(100vh - 70px);
-        background: white;
+        background: var(--bg-primary);
         box-shadow: var(--shadow-lg);
         transition: right var(--transition-normal);
     }
@@ -1468,7 +1472,15 @@ body.dark-mode .contact-social a {
     }
     
     .nav-actions {
-        display: none;
+        display: flex;
+        gap: var(--spacing-xs);
+    }
+    
+    .theme-toggle,
+    .lang-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.875rem;
     }
 }
 
