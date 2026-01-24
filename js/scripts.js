@@ -365,8 +365,8 @@ function createBackToTop() {
     backToTop.className = 'back-to-top';
     backToTop.style.cssText = `
         position: fixed;
-        bottom: 30px;
-        right: 30px;
+        bottom: 100px;
+        right: 40px;
         width: 50px;
         height: 50px;
         background: var(--primary-color);

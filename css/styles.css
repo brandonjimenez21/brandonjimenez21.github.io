@@ -1406,6 +1406,7 @@ body.dark-mode .contact-social a {
     
     .hero-social {
         justify-content: center;
+        margin-bottom: 3rem;
     }
     
     .image-container {
@@ -1424,6 +1425,13 @@ body.dark-mode .contact-social a {
     
     .section-title {
         font-size: 2rem;
+    }
+}
+
+/* Tablet and below - Hide scroll indicator */
+@media (max-width: 970px) {
+    .scroll-indicator {
+        display: none;
     }
 }
 
@@ -1512,6 +1520,10 @@ body.dark-mode .contact-social a {
         height: 40px;
         font-size: 0.875rem;
     }
+    
+    .hero-social {
+        margin-bottom: 3rem;
+    }
 }
 
 /* Small Mobile */
@@ -1533,6 +1545,10 @@ body.dark-mode .contact-social a {
         width: 40px;
         height: 40px;
         font-size: 0.9rem;
+    }
+    
+    .hero-social {
+        margin-bottom: 3rem;
     }
 }
 
@@ -2093,10 +2109,10 @@ body.dark-mode .hero-video {
    =================================== */
 .terminal-toggle {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 60px;
-    height: 60px;
+    bottom: 30px;
+    right: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
@@ -2303,8 +2319,8 @@ body.dark-mode .hero-video {
     }
     
     .terminal-toggle {
-        bottom: 1rem;
-        right: 1rem;
+        bottom: 30px;
+        right: 40px;
         width: 50px;
         height: 50px;
         font-size: 1.25rem;
