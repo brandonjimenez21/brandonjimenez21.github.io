@@ -87,6 +87,10 @@ body.dark-mode .contact-form {
     background: var(--bg-secondary);
 }
 
+body.dark-mode .contact-item:hover {
+    background: var(--bg-primary);
+}
+
 body.dark-mode input,
 body.dark-mode textarea {
     background: var(--bg-primary);

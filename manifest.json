@@ -1,0 +1,20 @@
+{
+    "name": "Brandon Jimenez - Portfolio",
+    "short_name": "BJ Portfolio",
+    "description": "Portafolio profesional de Brandon Jimenez - Desarrollador Full Stack",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f172a",
+    "theme_color": "#6366f1",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/assets/favicon.ico",
+            "sizes": "48x48",
+            "type": "image/x-icon"
+        }
+    ],
+    "categories": ["portfolio", "developer", "web"],
+    "lang": "es",
+    "dir": "ltr"
+}

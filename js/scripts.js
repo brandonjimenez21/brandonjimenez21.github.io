@@ -1,4 +1,40 @@
 // ===================================
+// SERVICE WORKER REGISTRATION (PWA)
+// ===================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+                console.log('✅ Service Worker registrado:', registration.scope);
+                
+                // Verificar actualizaciones
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    console.log('🔄 Nueva versión del Service Worker encontrada');
+                    
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('📥 Nueva versión disponible. Recarga para actualizar.');
+                        }
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error('❌ Error al registrar Service Worker:', error);
+            });
+    });
+    
+    // Detectar si está offline
+    window.addEventListener('offline', () => {
+        console.log('📵 Modo offline activado');
+    });
+    
+    window.addEventListener('online', () => {
+        console.log('🌐 Conexión restaurada');
+    });
+}
+
+// ===================================
 // MATRIX PRELOADER
 // ===================================
 const matrixPreloader = document.getElementById('matrix-preloader');
@@ -821,7 +857,6 @@ initCustomCursor();
 // ===================================
 // GLASSMORPHISM EFFECTS
 // ===================================
-// Activar efectos de glassmorphism
 document.body.classList.add('glassmorphism');
 
 // ===================================
@@ -1073,8 +1108,8 @@ const commands = {
     about: 'Soy Brandon Jiménez, Full Stack Developer apasionado por crear experiencias web innovadoras.',
     skills: 'HTML, CSS, JavaScript, React, Node.js, Python, Django, Git, MySQL, MongoDB',
     projects: 'Proyectos destacados:\n  1. E-commerce Platform\n  2. Task Manager App\n  3. Portfolio Website',
-    contact: 'Email: brandonjimenez.dev@gmail.com\nGitHub: github.com/brandonjimenez21\nLinkedIn: linkedin.com/in/brandon-jimenez',
-    social: 'GitHub: github.com/brandonjimenez21\nLinkedIn: linkedin.com/in/brandon-jimenez\nTwitter: @brandonjimenez',
+    contact: 'Email: brandonjimenez.dev@gmail.com\nGitHub: https://github.com/brandonjimenez21\nLinkedIn: https://www.linkedin.com/in/brandon-jimenez-1a124b215/',
+    social: 'GitHub: https://github.com/brandonjimenez21\nLinkedIn: https://www.linkedin.com/in/brandon-jimenez-1a124b215/\nTwitter: @brandonjimenez',
     clear: 'CLEAR'
 };
 
