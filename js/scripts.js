@@ -3,15 +3,176 @@
 // ===================================
 const matrixPreloader = document.getElementById('matrix-preloader');
 
+// Preloader particles animation
+const preloaderCanvas = document.getElementById('preloaderParticles');
+let preloaderAnimationRunning = true;
+
+if (preloaderCanvas) {
+    const pCtx = preloaderCanvas.getContext('2d');
+    
+    function resizePreloaderCanvas() {
+        preloaderCanvas.width = window.innerWidth;
+        preloaderCanvas.height = window.innerHeight;
+    }
+    resizePreloaderCanvas();
+    window.addEventListener('resize', resizePreloaderCanvas);
+    
+    const pSymbols = ['<', '>', '{', '}', '[', ']', '(', ')', ';', '=', '+', '-', '*', '/', '&', '|', '$', '#', '@'];
+    
+    class PreloaderParticle {
+        constructor() {
+            this.x = Math.random() * preloaderCanvas.width;
+            this.y = Math.random() * preloaderCanvas.height;
+            this.vx = (Math.random() - 0.5) * 0.4;
+            this.vy = (Math.random() - 0.5) * 0.4;
+            this.symbol = pSymbols[Math.floor(Math.random() * pSymbols.length)];
+            this.size = Math.random() * 12 + 10;
+            this.alpha = Math.random() * 0.4 + 0.6;
+            const colors = ['#6366f1', '#ec4899', '#a855f7'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < -20) this.x = preloaderCanvas.width + 20;
+            if (this.x > preloaderCanvas.width + 20) this.x = -20;
+            if (this.y < -20) this.y = preloaderCanvas.height + 20;
+            if (this.y > preloaderCanvas.height + 20) this.y = -20;
+        }
+        
+        draw() {
+            pCtx.font = `${this.size}px 'Courier New', monospace`;
+            pCtx.fillStyle = this.color;
+            pCtx.globalAlpha = this.alpha;
+            pCtx.fillText(this.symbol, this.x, this.y);
+        }
+    }
+    
+    const preloaderParticles = [];
+    for (let i = 0; i < 40; i++) {
+        preloaderParticles.push(new PreloaderParticle());
+    }
+    
+    function animatePreloaderParticles() {
+        if (!preloaderAnimationRunning) return;
+        
+        pCtx.clearRect(0, 0, preloaderCanvas.width, preloaderCanvas.height);
+        preloaderParticles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        pCtx.globalAlpha = 1;
+        requestAnimationFrame(animatePreloaderParticles);
+    }
+    
+    animatePreloaderParticles();
+}
+
 // Ocultar preloader después de la animación
 window.addEventListener('load', () => {
     setTimeout(() => {
+        preloaderAnimationRunning = false;
         matrixPreloader.classList.add('hidden');
         setTimeout(() => {
             matrixPreloader.style.display = 'none';
         }, 500);
     }, 3000); // 3 segundos de animación
 });
+
+// ===================================
+// CODE PARTICLES ANIMATION
+// ===================================
+const codeParticlesCanvas = document.getElementById('codeParticles');
+if (codeParticlesCanvas) {
+    const ctx = codeParticlesCanvas.getContext('2d');
+    
+    // Set canvas size
+    function resizeCanvas() {
+        codeParticlesCanvas.width = codeParticlesCanvas.offsetWidth;
+        codeParticlesCanvas.height = codeParticlesCanvas.offsetHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Code symbols
+    const symbols = ['<', '>', '{', '}', '[', ']', '(', ')', ';', '=', '+', '-', '*', '/', '&', '|', '$', '#', '@'];
+    
+    // Particle class
+    class CodeParticle {
+        constructor() {
+            this.reset();
+        }
+        
+        reset() {
+            this.x = Math.random() * codeParticlesCanvas.width;
+            this.y = Math.random() * codeParticlesCanvas.height;
+            this.vx = (Math.random() - 0.5) * 0.3;
+            this.vy = (Math.random() - 0.5) * 0.3;
+            this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
+            this.size = Math.random() * 12 + 10;
+            this.alpha = Math.random() * 0.4 + 0.6;
+            
+            // Get current colors from CSS
+            const isDark = document.body.classList.contains('dark-mode');
+            const colors = ['#6366f1', '#ec4899', '#a855f7']; // indigo, pink, purple
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            
+            // Wrap around edges
+            if (this.x < -20) this.x = codeParticlesCanvas.width + 20;
+            if (this.x > codeParticlesCanvas.width + 20) this.x = -20;
+            if (this.y < -20) this.y = codeParticlesCanvas.height + 20;
+            if (this.y > codeParticlesCanvas.height + 20) this.y = -20;
+        }
+        
+        draw() {
+            ctx.font = `${this.size}px 'Courier New', monospace`;
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.alpha;
+            ctx.fillText(this.symbol, this.x, this.y);
+        }
+    }
+    
+    // Create particles
+    const particleCount = 30;
+    const particles = [];
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new CodeParticle());
+    }
+    
+    // Animation loop
+    function animateCodeParticles() {
+        ctx.clearRect(0, 0, codeParticlesCanvas.width, codeParticlesCanvas.height);
+        
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(animateCodeParticles);
+    }
+    
+    animateCodeParticles();
+    
+    // Update particle colors on theme change
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            setTimeout(() => {
+                particles.forEach(particle => {
+                    const colors = ['#6366f1', '#ec4899', '#a855f7'];
+                    particle.color = colors[Math.floor(Math.random() * colors.length)];
+                });
+            }, 100);
+        });
+    }
+}
 
 // ===================================
 // CONFIGURACIÓN Y VARIABLES
@@ -897,6 +1058,100 @@ function confetti() {
         document.head.appendChild(style);
     }
 }
+
+// ===================================
+// TERMINAL INTERACTIVA
+// ===================================
+const terminalToggle = document.getElementById('terminal-toggle');
+const terminalContainer = document.getElementById('terminal-container');
+const terminalClose = document.getElementById('terminal-close');
+const terminalInput = document.getElementById('terminal-input');
+const terminalOutput = document.getElementById('terminal-output');
+
+const commands = {
+    help: 'Comandos disponibles:\n  about - Información sobre mí\n  skills - Mis habilidades\n  projects - Mis proyectos\n  contact - Información de contacto\n  clear - Limpiar terminal\n  social - Redes sociales',
+    about: 'Soy Brandon Jiménez, Full Stack Developer apasionado por crear experiencias web innovadoras.',
+    skills: 'HTML, CSS, JavaScript, React, Node.js, Python, Django, Git, MySQL, MongoDB',
+    projects: 'Proyectos destacados:\n  1. E-commerce Platform\n  2. Task Manager App\n  3. Portfolio Website',
+    contact: 'Email: brandonjimenez.dev@gmail.com\nGitHub: github.com/brandonjimenez21\nLinkedIn: linkedin.com/in/brandon-jimenez',
+    social: 'GitHub: github.com/brandonjimenez21\nLinkedIn: linkedin.com/in/brandon-jimenez\nTwitter: @brandonjimenez',
+    clear: 'CLEAR'
+};
+
+terminalToggle.addEventListener('click', () => {
+    terminalContainer.classList.toggle('active');
+    if (terminalContainer.classList.contains('active')) {
+        terminalInput.focus();
+    }
+});
+
+terminalClose.addEventListener('click', () => {
+    terminalContainer.classList.remove('active');
+});
+
+terminalInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        const command = terminalInput.value.trim().toLowerCase();
+        
+        if (command) {
+            addTerminalLine(command, 'command');
+            
+            if (commands[command]) {
+                if (command === 'clear') {
+                    terminalOutput.innerHTML = '';
+                } else {
+                    addTerminalLine(commands[command], 'success');
+                }
+            } else {
+                addTerminalLine(`Comando no encontrado: ${command}. Escribe 'help' para ver comandos disponibles.`, 'error');
+            }
+        }
+        
+        terminalInput.value = '';
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+});
+
+function addTerminalLine(text, type = 'text') {
+    const line = document.createElement('div');
+    line.className = 'terminal-line';
+    
+    if (type === 'command') {
+        line.innerHTML = `<span class="terminal-prompt">brandon@portfolio:~$</span> <span class="terminal-command">${text}</span>`;
+    } else {
+        const className = type === 'error' ? 'terminal-error' : type === 'success' ? 'terminal-success' : 'terminal-text';
+        line.innerHTML = `<span class="${className}">${text.replace(/\n/g, '<br>')}</span>`;
+    }
+    
+    terminalOutput.appendChild(line);
+}
+
+// ===================================
+// TILT EFFECT EN CARDS
+// ===================================
+const tiltCards = document.querySelectorAll('.skill-card, .project-card, .hobby-card');
+
+tiltCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+        
+        card.style.setProperty('--rotate-x', `${rotateX}deg`);
+        card.style.setProperty('--rotate-y', `${rotateY}deg`);
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        card.style.setProperty('--rotate-x', '0deg');
+        card.style.setProperty('--rotate-y', '0deg');
+    });
+});
 
 // ===================================
 // DETECCIÓN DE MODO OSCURO DEL SISTEMA

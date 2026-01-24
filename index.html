@@ -24,6 +24,7 @@
 <body>
     <!-- Matrix Preloader -->
     <div class="matrix-preloader" id="matrix-preloader">
+        <canvas id="preloaderParticles" class="preloader-particles-canvas"></canvas>
         <div class="preloader-content">
             <div class="code-lines">
                 <div class="code-line"><span class="comment">// Inicializando portafolio...</span></div>
@@ -72,6 +73,9 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
+        <!-- Animated Code Particles -->
+        <canvas id="codeParticles" class="code-particles-canvas"></canvas>
+        
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
@@ -114,7 +118,7 @@
                         <div class="floating-shape shape-1"></div>
                         <div class="floating-shape shape-2"></div>
                         <div class="floating-shape shape-3"></div>
-                        <img src="#" alt="Brandon Jimenez" class="profile-img">
+                        <img src="#" class="profile-img">
                     </div>
                 </div>
             </div>
@@ -170,9 +174,10 @@
                         </div>
                     </div>
                     
-                    <a href="assets/Brandon_Jimenez_CV.pdf" class="btn btn-primary" download>
+                    <a href="assets/Brandon_Jimenez_CV.pdf" class="btn btn-primary btn-download" download>
                         <span data-en="Download CV">Descargar CV</span>
                         <i class="fas fa-download"></i>
+                        <div class="download-progress"></div>
                     </a>
                 </div>
             </div>
@@ -512,6 +517,38 @@
         </div>
     </section>
 
+    <!-- Interactive Terminal -->
+    <div class="terminal-container" id="terminal-container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <span class="terminal-btn close"></span>
+                    <span class="terminal-btn minimize"></span>
+                    <span class="terminal-btn maximize"></span>
+                </div>
+                <div class="terminal-title">brandon@portfolio:~$</div>
+                <button class="terminal-close-btn" id="terminal-close">&times;</button>
+            </div>
+            <div class="terminal-body">
+                <div class="terminal-output" id="terminal-output">
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">brandon@portfolio:~$</span>
+                        <span class="terminal-text">Welcome! Type 'help' for available commands.</span>
+                    </div>
+                </div>
+                <div class="terminal-input-line">
+                    <span class="terminal-prompt">brandon@portfolio:~$</span>
+                    <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Terminal Toggle Button -->
+    <button class="terminal-toggle" id="terminal-toggle" aria-label="Abrir terminal">
+        <i class="fas fa-terminal"></i>
+    </button>
+    
     <!-- Footer -->
     <footer class="footer">
         <div class="container">

@@ -416,6 +416,23 @@ body.dark-mode .nav-toggle span {
 }
 
 /* ===================================
+   CODE PARTICLES BACKGROUND
+   =================================== */
+.code-particles-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.5;
+}
+
+body.dark-mode .code-particles-canvas {
+    opacity: 0.35;
+}
+
+/* ===================================
    HERO SECTION
    =================================== */
 .hero {
@@ -822,6 +839,19 @@ body.dark-mode .info-item:hover {
     align-items: center;
     justify-content: center;
     transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.preloader-particles-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+}
+
+body.dark-mode .preloader-particles-canvas {
+    opacity: 0.45;
 }
 
 body.dark-mode .matrix-preloader {
@@ -1939,19 +1969,352 @@ body.glassmorphism.dark-mode .hobby-card {
     color: #10b981;
 }
 
-/* Page Transitions */
-.page-transition {
-    position: fixed;
+/* ===================================
+   ANIMATED BLOBS
+   =================================== */
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.3;
+    animation: blob-float 20s ease-in-out infinite;
+    z-index: 0;
+}
+
+.blob-1 {
+    width: 500px;
+    height: 500px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.blob-2 {
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    bottom: -10%;
+    right: -10%;
+    animation-delay: -7s;
+}
+
+.blob-3 {
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    top: 50%;
+    left: 50%;
+    animation-delay: -14s;
+}
+
+@keyframes blob-float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+}
+
+body.dark-mode .blob {
+    opacity: 0.15;
+}
+
+/* ===================================
+   VIDEO BACKGROUND
+   =================================== */
+.hero-video {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    z-index: 10000;
-    transform: translateY(-100%);
-    transition: transform 0.5s ease-in-out;
+    object-fit: cover;
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.page-transition.active {
-    transform: translateY(0);
+body.dark-mode .hero-video {
+    opacity: 0.10;
+}
+
+/* ===================================
+   GLITCH EFFECT
+   =================================== */
+.logo:hover,
+.hero-title:hover {
+    animation: glitch 0.3s ease-in-out;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px, 2px);
+    }
+    40% {
+        transform: translate(-2px, -2px);
+    }
+    60% {
+        transform: translate(2px, 2px);
+    }
+    80% {
+        transform: translate(2px, -2px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+/* ===================================
+   TILT EFFECT FOR CARDS
+   =================================== */
+.skill-card,
+.project-card,
+.hobby-card {
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease;
+}
+
+.skill-card:hover,
+.project-card:hover,
+.hobby-card:hover {
+    transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) scale(1.02);
+}
+
+/* ===================================
+   TERMINAL INTERACTIVE
+   =================================== */
+.terminal-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    z-index: 999;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.terminal-toggle:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
+}
+
+.terminal-container {
+    position: fixed;
+    bottom: 100px;
+    right: 2rem;
+    width: 600px;
+    max-width: calc(100vw - 4rem);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.95);
+    transition: all var(--transition-normal);
+}
+
+.terminal-container.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.terminal {
+    background: #1e1e1e;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.terminal-header {
+    background: #323232;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.terminal-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.terminal-btn.close {
+    background: #ff5f56;
+}
+
+.terminal-btn.minimize {
+    background: #ffbd2e;
+}
+
+.terminal-btn.maximize {
+    background: #27c93f;
+}
+
+.terminal-title {
+    color: #a0a0a0;
+    font-size: 0.875rem;
+    font-family: 'Courier New', monospace;
+    flex: 1;
+}
+
+.terminal-close-btn {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color var(--transition-fast);
+}
+
+.terminal-close-btn:hover {
+    color: #fff;
+}
+
+.terminal-body {
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+
+.terminal-output {
+    margin-bottom: 1rem;
+}
+
+.terminal-line {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.terminal-prompt {
+    color: #4ec9b0;
+    margin-right: 0.5rem;
+}
+
+.terminal-text {
+    color: #d4d4d4;
+}
+
+.terminal-command {
+    color: #569cd6;
+}
+
+.terminal-error {
+    color: #f48771;
+}
+
+.terminal-success {
+    color: #4ec9b0;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+}
+
+.terminal-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #d4d4d4;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    padding: 0;
+}
+
+.terminal-input::selection {
+    background: #264f78;
+}
+
+/* ===================================
+   DOWNLOAD CV ANIMATED
+   =================================== */
+.btn-download {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-download::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-download:hover::before {
+    left: 100%;
+}
+
+.btn-download .download-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent-color);
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.btn-download:active .download-progress {
+    width: 100%;
+}
+
+/* ===================================
+   RESPONSIVE TERMINAL
+   =================================== */
+@media (max-width: 768px) {
+    .terminal-container {
+        right: 1rem;
+        left: 1rem;
+        width: auto;
+        max-width: none;
+        bottom: 80px;
+    }
+    
+    .terminal-toggle {
+        bottom: 1rem;
+        right: 1rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .terminal-body {
+        max-height: 300px;
+    }
+    
+    .blob {
+        display: none;
+    }
 }
