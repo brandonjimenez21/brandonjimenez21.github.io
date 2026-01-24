@@ -397,7 +397,9 @@ images.forEach(img => imageObserver.observe(img));
 // ===================================
 function createBackToTop() {
     const backToTop = document.createElement('button');
-    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-arrow-up';
+    backToTop.appendChild(icon);
     backToTop.className = 'back-to-top';
     backToTop.style.cssText = `
         position: fixed;
@@ -1126,7 +1128,9 @@ terminalClose.addEventListener('click', () => {
 
 terminalInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        const command = terminalInput.value.trim().toLowerCase();
+        // Sanitizar input: solo permitir caracteres alfanuméricos, espacios y guiones
+        const rawCommand = terminalInput.value.trim();
+        const command = rawCommand.replace(/[^a-z0-9\s-]/gi, '').toLowerCase();
         
         if (command) {
             addTerminalLine(command, 'command');
@@ -1152,10 +1156,33 @@ function addTerminalLine(text, type = 'text') {
     line.className = 'terminal-line';
     
     if (type === 'command') {
-        line.innerHTML = `<span class="terminal-prompt">brandon@portfolio:~$</span> <span class="terminal-command">${text}</span>`;
+        // Prevenir XSS usando textContent
+        const prompt = document.createElement('span');
+        prompt.className = 'terminal-prompt';
+        prompt.textContent = 'brandon@portfolio:~$ ';
+        
+        const command = document.createElement('span');
+        command.className = 'terminal-command';
+        command.textContent = text;
+        
+        line.appendChild(prompt);
+        line.appendChild(command);
     } else {
         const className = type === 'error' ? 'terminal-error' : type === 'success' ? 'terminal-success' : 'terminal-text';
-        line.innerHTML = `<span class="${className}">${text.replace(/\n/g, '<br>')}</span>`;
+        const span = document.createElement('span');
+        span.className = className;
+        
+        // Convertir saltos de línea de forma segura
+        const lines = text.split('\n');
+        lines.forEach((lineText, index) => {
+            const textNode = document.createTextNode(lineText);
+            span.appendChild(textNode);
+            if (index < lines.length - 1) {
+                span.appendChild(document.createElement('br'));
+            }
+        });
+        
+        line.appendChild(span);
     }
     
     terminalOutput.appendChild(line);
