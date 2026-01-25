@@ -1,5 +1,5 @@
 // Service Worker para modo offline
-const CACHE_NAME = 'portfolio-cache-v4';
+const CACHE_NAME = 'portfolio-cache-v5';
 const urlsToCache = [
     '/',
     '/index.html',
@@ -50,18 +50,45 @@ self.addEventListener('activate', (event) => {
     return self.clients.claim();
 });
 
-// Interceptar peticiones (estrategia Cache First con soporte CORS)
+// Interceptar peticiones (estrategia Network First para archivos principales)
 self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+    
+    // Network First para HTML, CSS y JS (siempre intenta la red primero)
+    const isMainResource = 
+        event.request.url.includes('.html') ||
+        event.request.url.includes('.css') ||
+        event.request.url.includes('.js') ||
+        event.request.url === self.location.origin + '/';
+    
+    if (isMainResource) {
+        event.respondWith(
+            fetch(event.request)
+                .then((response) => {
+                    // Cachear la nueva versión
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                    return response;
+                })
+                .catch(() => {
+                    // Si falla la red, usar caché como fallback
+                    return caches.match(event.request);
+                })
+        );
+        return;
+    }
+    
+    // Cache First para otros recursos (fuentes, imágenes, etc.)
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
-                // Si está en caché, devolver la respuesta cacheada
                 if (response) {
                     console.log('Service Worker: Sirviendo desde caché:', event.request.url);
                     return response;
                 }
                 
-                // Si no está en caché, hacer fetch
                 return fetch(event.request.clone())
                     .then((response) => {
                         // Verificar si es una respuesta válida
