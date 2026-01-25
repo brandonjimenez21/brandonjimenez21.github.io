@@ -3,8 +3,10 @@
 // ===================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // Solo registrar en producción (no en localhost/127.0.0.1)
-        const isProduction = !window.location.hostname.match(/localhost|127\.0\.0\.1/);
+        // Solo registrar en producción (no en localhost/127.0.0.1/file://)
+        const isProduction = 
+            !window.location.hostname.match(/localhost|127\.0\.0\.1|^\d+\.\d+\.\d+\.\d+$/) &&
+            window.location.protocol !== 'file:';
         
         if (isProduction) {
             navigator.serviceWorker.register('/service-worker.js')
@@ -28,6 +30,14 @@ if ('serviceWorker' in navigator) {
                 });
         } else {
             console.log('🔧 Modo desarrollo - Service Worker deshabilitado');
+            
+            // Desregistrar cualquier Service Worker existente en desarrollo
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    registration.unregister();
+                    console.log('🗑️ Service Worker desregistrado en modo desarrollo');
+                });
+            });
         }
     });
     
@@ -636,8 +646,14 @@ function translatePage(lang) {
         if (lang === 'en') {
             el.textContent = el.getAttribute('data-en');
         } else {
-            const enText = el.getAttribute('data-en');
-            el.textContent = translations.es[enText] || el.textContent;
+            // Usar data-es si existe, sino buscar en diccionario
+            const esText = el.getAttribute('data-es');
+            if (esText) {
+                el.textContent = esText;
+            } else {
+                const enText = el.getAttribute('data-en');
+                el.textContent = translations.es[enText] || el.textContent;
+            }
         }
     });
     
@@ -799,11 +815,6 @@ window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
-
-// ===================================
-// PRELOADER - DESACTIVADO
-// ===================================
-// Preloader removido porque la página carga muy rápido
 
 // ===================================
 // CUSTOM CURSOR (OPTIONAL)
@@ -1684,4 +1695,4 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.style.setProperty('--transition-slow', '0s');
 }
 
-console.log('✅ Portfolio cargado correctamente');
+console.log('✅ Portafolio cargado correctamente');

@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="description" content="Brandon Jimenez - Portafolio Profesional de Desarrollo Web">
     <meta name="author" content="Brandon Jimenez">
     <meta name="theme-color" content="#6366f1">
@@ -60,7 +63,7 @@
                 <ul class="nav-list">
                     <li><a href="#home" class="nav-link active" data-en="Home">Inicio</a></li>
                     <li><a href="#about" class="nav-link" data-en="About">Sobre Mí</a></li>
-                    <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#skills" class="nav-link" data-en="Skills">Habilidades</a></li>
                     <li><a href="#projects" class="nav-link" data-en="Projects">Proyectos</a></li>
                     <li><a href="#testimonials" class="nav-link" data-en="Comments">Comentarios</a></li>
                     <li><a href="#contact" class="nav-link" data-en="Contact">Contacto</a></li>
@@ -92,23 +95,25 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <p class="hero-subtitle fade-in" data-en="Hello, I'm">Hola, soy</p>
+                    <p class="hero-subtitle fade-in" data-es="Hola, soy" data-en="Hello, I'm">Hola, soy</p>
                     <h1 class="hero-title fade-in-up">Brandon Jimenez</h1>
                     <h2 class="hero-role fade-in-up">
                         <span class="typing-text"></span>
                     </h2>
-                    <p class="hero-description fade-in-up" data-en="[Write your professional description here. Example: Full Stack Developer passionate about creating innovative and functional web experiences that positively impact users.]">
+                    <p class="hero-description fade-in-up" 
+                       data-es="Estudiante de Tecnología en Desarrollo de Software (6º semestre) con sólida formación en programación, desarrollo web y bases de datos. Apasionado por crear soluciones tecnológicas funcionales y bien estructuradas, combinando lógica, diseño y buenas prácticas."
+                       data-en="Software Development Technology student (6th semester) with solid training in programming, web development and databases. Passionate about creating functional and well-structured technological solutions, combining logic, design and best practices.">
                         Estudiante de Tecnología en Desarrollo de Software (6º semestre) con sólida formación en programación, 
                         desarrollo web y bases de datos. Apasionado por crear soluciones tecnológicas funcionales y bien 
                         estructuradas, combinando lógica, diseño y buenas prácticas.
                     </p>
                     <div class="hero-buttons fade-in-up">
                         <a href="#contact" class="btn btn-primary">
-                            <span data-en="Contact Me">Contáctame</span>
+                            <span data-es="Contáctame" data-en="Contact Me">Contáctame</span>
                             <i class="fas fa-arrow-right"></i>
                         </a>
                         <a href="#projects" class="btn btn-secondary">
-                            <span data-en="View Projects">Ver Proyectos</span>
+                            <span data-es="Ver Proyectos" data-en="View Projects">Ver Proyectos</span>
                             <i class="fas fa-briefcase"></i>
                         </a>
                     </div>
@@ -150,8 +155,8 @@
     <section id="about" class="about section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title" data-en="About Me">Sobre Mí</h2>
-                <p class="section-subtitle" data-en="Learn more about my journey">Conoce un poco más sobre mi trayectoria</p>
+                <h2 class="section-title" data-es="Sobre Mí" data-en="About Me">Sobre Mí</h2>
+                <p class="section-subtitle" data-es="Conoce un poco más sobre mi trayectoria" data-en="Learn more about my journey">Conoce un poco más sobre mi trayectoria</p>
             </div>
             
             <div class="about-content">
@@ -159,21 +164,21 @@
                     <div class="about-img-wrapper">
                         <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=800&fit=crop" alt="Sobre mí">
                         <div class="experience-badge">
-                            <span class="experience-number">[X]+</span>
-                            <span class="experience-text">Años de Experiencia</span>
+                            <span class="experience-number">[0]+</span>
+                            <span class="experience-text" data-es="Años de Experiencia" data-en="Years of Experience">Años de Experiencia</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="about-text">
-                    <h3 data-en="Professional Web Developer">Desarrollador Web Profesional</h3>
-                    <p>
+                    <h3 data-es="Desarrollador Web Profesional" data-en="Professional Web Developer">Desarrollador Web Profesional</h3>
+                    <p data-en="I have worked on various academic and personal projects that you can find in my GitHub repository: brandonjimenez21, where I apply technologies such as Python, Django, JavaScript, React and PostgreSQL. I am interested in continuing to strengthen my skills in both front-end and back-end, as well as in agile methodologies and version control with Git.">
                         He trabajado en diversos proyectos académicos y personales que puedes encontrar en mi repositorio de 
-                        GitHub: github.com/brandonjimenez21, donde aplico tecnologías como Python, Django, JavaScript, React y 
+                        GitHub: <strong><a href="https://github.com/brandonjimenez21" target="_blank" rel="noopener noreferrer">brandonjimenez21</a>,</strong> donde aplico tecnologías como Python, Django, JavaScript, React y 
                         PostgreSQL. Me interesa seguir fortaleciendo mis habilidades tanto en el front-end como en el back-end, 
                         así como en metodologías ágiles y control de versiones con Git.
                     </p>
-                    <p>
+                    <p data-en="I am looking for opportunities to continue learning and growing in the world of development, whether in internships or collaborations on real projects. I am motivated by working as a team, facing new challenges and contributing with creativity and responsibility.">
                         Busco oportunidades para seguir aprendiendo y creciendo en el mundo del desarrollo, ya sea en prácticas, 
                         pasantías o colaboraciones en proyectos reales. Me motiva trabajar en equipo, enfrentar nuevos desafíos y 
                         aportar con creatividad y responsabilidad.
@@ -182,20 +187,20 @@
                     <div class="about-info">
                         <div class="info-item">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>Colombia</span>
+                            <span data-es="Colombia" data-en="Colombia">Colombia</span>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-graduation-cap"></i>
-                            <span>Técnico en Desarollo de Software</span>
+                            <span data-es="Técnico en Desarollo de Software" data-en="Software Development Technician">Técnico en Desarollo de Software</span>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-briefcase"></i>
-                            <span data-en="Available for Projects">Disponible para Proyectos</span>
+                            <span data-es="Disponible para Proyectos" data-en="Available for Projects">Disponible para Proyectos</span>
                         </div>
                     </div>
                     
                     <a href="assets/Brandon_Jimenez_CV.pdf" class="btn btn-primary btn-download" download>
-                        <span data-en="Download CV">Descargar CV</span>
+                        <span data-es="Descargar CV" data-en="Download CV">Descargar CV</span>
                         <i class="fas fa-download"></i>
                         <div class="download-progress"></div>
                     </a>
@@ -208,13 +213,13 @@
     <section id="skills" class="skills section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title" data-en="Technical Skills">Habilidades Técnicas</h2>
-                <p class="section-subtitle" data-en="Technologies and tools I master">Tecnologías y herramientas que domino</p>
+                <h2 class="section-title" data-es="Habilidades Técnicas" data-en="Technical Skills">Habilidades Técnicas</h2>
+                <p class="section-subtitle" data-es="Tecnologías y herramientas que domino" data-en="Technologies and tools I master">Tecnologías y herramientas que domino</p>
             </div>
             
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3>Frontend</h3>
+                    <h3 data-es="Frontend" data-en="Frontend">Frontend</h3>
                     <div class="skill-items">
                         <div class="skill-item" data-skill-level="90">
                             <i class="fab fa-html5"></i>
@@ -245,7 +250,7 @@
                 </div>
                 
                 <div class="skill-category">
-                    <h3>Backend</h3>
+                    <h3 data-es="Backend" data-en="Backend">Backend</h3>
                     <div class="skill-items">
                         <div class="skill-item" data-skill-level="75">
                             <i class="fab fa-node-js"></i>
@@ -278,7 +283,7 @@
                 </div>
                 
                 <div class="skill-category">
-                    <h3>Herramientas</h3>
+                    <h3 data-es="Herramientas" data-en="Tools">Herramientas</h3>
                     <div class="skill-items">
                         <div class="skill-item" data-skill-level="85">
                             <i class="fab fa-git-alt"></i>
@@ -318,22 +323,22 @@
                 <div class="stat-card">
                     <i class="fas fa-code"></i>
                     <h3 class="stat-number" data-target="24">0</h3>
-                    <p data-en="Projects Completed">Proyectos Completados</p>
+                    <p data-es="Proyectos Completados" data-en="Projects Completed">Proyectos Completados</p>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-users"></i>
                     <h3 class="stat-number" data-target="5">0</h3>
-                    <p data-en="Happy Clients">Clientes Satisfechos</p>
+                    <p data-es="Clientes Satisfechos" data-en="Happy Clients">Clientes Satisfechos</p>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-coffee"></i>
                     <h3 class="stat-number" data-target="1500">0</h3>
-                    <p data-en="Cups of Coffee">Tazas de Café</p>
+                    <p data-es="Tazas de Café" data-en="Cups of Coffee">Tazas de Café</p>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-award"></i>
                     <h3 class="stat-number" data-target="8">0</h3>
-                    <p data-en="Years of Experience">Años de Experiencia Programando</p>
+                    <p data-es="Años de Experiencia Programando" data-en="Years of Experience">Años de Experiencia Programando</p>
                 </div>
             </div>
         </div>
@@ -343,8 +348,8 @@
     <section id="projects" class="projects section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title" data-en="Featured Projects">Proyectos Destacados</h2>
-                <p class="section-subtitle" data-en="Some of my recent work">Algunos de mis trabajos recientes</p>
+                <h2 class="section-title" data-es="Proyectos Destacados" data-en="Featured Projects">Proyectos Destacados</h2>
+                <p class="section-subtitle" data-es="Algunos de mis trabajos recientes" data-en="Some of my recent work">Algunos de mis trabajos recientes</p>
             </div>
             
             <div class="projects-grid">
@@ -361,8 +366,8 @@
                         </div>
                     </div>
                     <div class="project-info">
-                        <h3>Voice.ly</h3>
-                        <p>Plataforma de comunicación por voz y video con funcionalidades avanzadas y UI moderna.</p>
+                        <h3 data-en="Voice.ly">Voice.ly</h3>
+                        <p data-es="Plataforma de comunicación por voz y video con funcionalidades avanzadas y UI moderna." data-en="Voice and video communication platform with advanced features and modern UI.">Plataforma de comunicación por voz y video con funcionalidades avanzadas y UI moderna.</p>
                         <div class="project-tags">
                             <span class="tag">React</span>
                             <span class="tag">Vite</span>
@@ -385,7 +390,7 @@
                     </div>
                     <div class="project-info">
                         <h3>Stats Prime</h3>
-                        <p>Plataforma de visualización y análisis de estadísticas del videojuego Genshin Impact con datos en tiempo real.</p>
+                        <p data-es="Plataforma de visualización y análisis de estadísticas del videojuego Genshin Impact con datos en tiempo real." data-en="Statistics visualization and analysis platform for Genshin Impact with real-time data.">Plataforma de visualización y análisis de estadísticas del videojuego Genshin Impact con datos en tiempo real.</p>
                         <div class="project-tags">
                             <span class="tag">React</span>
                             <span class="tag">Vite</span>
@@ -404,8 +409,8 @@
                         </div>
                     </div>
                     <div class="project-info">
-                        <h3>Orbis Finance</h3>
-                        <p>Plataforma financiera en desarrollo con herramientas de gestión y análisis económico.</p>
+                        <h3 data-en="Orbis Finance">Orbis Finance</h3>
+                        <p data-es="Plataforma financiera en desarrollo con herramientas de gestión y análisis económico." data-en="Financial platform in development with management and economic analysis tools.">Plataforma financiera en desarrollo con herramientas de gestión y análisis económico.</p>
                         <div class="project-tags">
                             <span class="tag">Node.js</span>
                             <span class="tag">Express</span>
@@ -422,30 +427,30 @@
     <section id="hobbies" class="hobbies section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title" data-en="Hobbies & Interests">Hobbies e Intereses</h2>
-                <p class="section-subtitle" data-en="What I enjoy doing in my free time">Lo que disfruto hacer en mi tiempo libre</p>
+                <h2 class="section-title" data-es="Hobbies e Intereses" data-en="Hobbies & Interests">Hobbies e Intereses</h2>
+                <p class="section-subtitle" data-es="Lo que disfruto hacer en mi tiempo libre" data-en="What I enjoy doing in my free time">Lo que disfruto hacer en mi tiempo libre</p>
             </div>
             
             <div class="hobbies-grid">
                 <div class="hobby-card">
                     <i class="fas fa-book"></i>
-                    <h3 data-en="Reading">Lectura</h3>
-                    <p data-en="Books on technology, philosophy and personal development">Libros de tecnología, filosofía y desarrollo personal</p>
+                    <h3 data-es="Lectura" data-en="Reading">Lectura</h3>
+                    <p data-es="Libros de tecnología, filosofía y desarrollo personal" data-en="Books on technology, philosophy and personal development">Libros de tecnología, filosofía y desarrollo personal</p>
                 </div>
                 <div class="hobby-card">
                     <i class="fas fa-gamepad"></i>
-                    <h3 data-en="Gaming">Videojuegos</h3>
-                    <p data-en="Strategy games and creative problem solving">Juegos de estrategia y resolución creativa de problemas</p>
+                    <h3 data-es="Videojuegos" data-en="Gaming">Videojuegos</h3>
+                    <p data-es="Juegos de estrategia y resolución creativa de problemas" data-en="Strategy games and creative problem solving">Juegos de estrategia y resolución creativa de problemas</p>
                 </div>
                 <div class="hobby-card">
                     <i class="fas fa-dumbbell"></i>
-                    <h3 data-en="Fitness">Ejercicio</h3>
-                    <p data-en="Gym and outdoor sports for a healthy balance">Gym y deportes al aire libre para un balance saludable</p>
+                    <h3 data-es="Ejercicio" data-en="Fitness">Ejercicio</h3>
+                    <p data-es="Gym y deportes al aire libre para un balance saludable" data-en="Gym and outdoor sports for a healthy balance">Gym y deportes al aire libre para un balance saludable</p>
                 </div>
                 <div class="hobby-card">
                     <i class="fas fa-music"></i>
-                    <h3 data-en="Music">Música</h3>
-                    <p data-en="Electronic music and playing guitar in my spare time">Música electrónica y tocar guitarra en mi tiempo libre</p>
+                    <h3 data-es="Música" data-en="Music">Música</h3>
+                    <p data-es="Música electrónica y tocar guitarra en mi tiempo libre" data-en="Electronic music and playing guitar in my spare time">Música electrónica y tocar guitarra en mi tiempo libre</p>
                 </div>
                 <div class="hobby-card">
                     <i class="fas fa-plane"></i>
@@ -454,8 +459,8 @@
                 </div>
                 <div class="hobby-card">
                     <i class="fas fa-camera"></i>
-                    <h3 data-en="Photography">Fotografía</h3>
-                    <p data-en="Capturing moments and urban landscapes">Capturar momentos y paisajes urbanos</p>
+                    <h3 data-es="Fotografía" data-en="Photography">Fotografía</h3>
+                    <p data-es="Capturar momentos y paisajes urbanos" data-en="Capturing moments and urban landscapes">Capturar momentos y paisajes urbanos</p>
                 </div>
             </div>
         </div>
@@ -465,13 +470,13 @@
     <section id="contact" class="contact section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title" data-en="Contact Me">Contáctame</h2>
-                <p class="section-subtitle" data-en="Have a project in mind? Let's talk">¿Tienes un proyecto en mente? Hablemos</p>
+                <h2 class="section-title" data-es="Contáctame" data-en="Contact Me">Contáctame</h2>
+                <p class="section-subtitle" data-es="¿Tienes un proyecto en mente? Hablemos" data-en="Have a project in mind? Let's talk">¿Tienes un proyecto en mente? Hablemos</p>
             </div>
             
             <div class="contact-content">
                 <div class="contact-info">
-                    <h3 data-en="Contact Information">Información de Contacto</h3>
+                    <h3 data-es="Información de Contacto" data-en="Contact Information">Información de Contacto</h3>
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
                         <div>
@@ -482,14 +487,14 @@
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
                         <div>
-                            <h4 data-en="Phone">Teléfono</h4>
+                            <h4 data-es="Teléfono" data-en="Phone">Teléfono</h4>
                             <p>+57 3176512803</p>
                         </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
-                            <h4 data-en="Location">Ubicación</h4>
+                            <h4 data-es="Ubicación" data-en="Location">Ubicación</h4>
                             <p>Cali, Colombia</p>
                         </div>
                     </div>
@@ -530,7 +535,7 @@
                         <textarea name="message" rows="5" placeholder="Tu Mensaje" data-en-placeholder="Your Message" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">
-                        <span data-en="Send Message">Enviar Mensaje</span>
+                        <span data-es="Enviar Mensaje" data-en="Send Message">Enviar Mensaje</span>
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </form>
@@ -579,17 +584,17 @@
                     <p data-en="Full Stack Web Developer passionate about creating innovative digital solutions.">Desarrollador Web Full Stack y Desarrollador de Software apasionado por crear soluciones digitales innovadoras.</p>
                 </div>
                 <div class="footer-section">
-                    <h4 data-en="Quick Links">Enlaces Rápidos</h4>
+                    <h4 data-es="Enlaces Rápidos" data-en="Quick Links">Enlaces Rápidos</h4>
                     <ul class="footer-links">
-                        <li><a href="#home" data-en="Home">Inicio</a></li>
-                        <li><a href="#about" data-en="About">Sobre Mí</a></li>
-                        <li><a href="#skills">Skills</a></li>
-                        <li><a href="#projects" data-en="Projects">Proyectos</a></li>
-                        <li><a href="#contact" data-en="Contact">Contacto</a></li>
+                        <li><a href="#home" data-es="Inicio" data-en="Home">Inicio</a></li>
+                        <li><a href="#about" data-es="Sobre Mí" data-en="About">Sobre Mí</a></li>
+                        <li><a href="#skills" data-es="Habilidades" data-en="Skills">Habilidades</a></li>
+                        <li><a href="#projects" data-es="Proyectos" data-en="Projects">Proyectos</a></li>
+                        <li><a href="#contact" data-es="Contacto" data-en="Contact">Contacto</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4 data-en="Share">Compartir</h4>
+                    <h4 data-es="Compartir" data-en="Share">Compartir</h4>
                     <div class="share-buttons">
                         <button class="share-btn" data-platform="twitter" aria-label="Compartir en Twitter">
                             <i class="fab fa-twitter"></i>
@@ -607,16 +612,16 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Brandon Jimenez. <span data-en="All rights reserved.">Todos los derechos reservados.</span></p>
+                <p>&copy; 2026 Brandon Jimenez. <span data-es="Todos los derechos reservados." data-en="All rights reserved.">Todos los derechos reservados.</span></p>
                 <p>
-                    <span data-en="Made with">Hecho con</span> 
+                    <span data-es="Hecho con" data-en="Made with">Hecho con</span> 
                     <i class="fas fa-heart"></i> 
-                    <span data-en="and code">y código</span>
+                    <span data-es="y código" data-en="and code">y código</span>
                 </p>
                 <div class="visit-counter">
                     <i class="fas fa-eye"></i>
                     <span id="visit-count">0</span>
-                    <span data-en="visits">visitas</span>
+                    <span data-es="visitas" data-en="visits">visitas</span>
                 </div>
             </div>
         </div>

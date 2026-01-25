@@ -365,7 +365,7 @@ body.dark-mode .navbar.scrolled {
 }
 
 body.dark-mode .theme-toggle i::before {
-    content: "\f185"; /* fa-sun */
+    content: "\f111"; /* fa-circle - icono simple y claro */
 }
 
 .nav-list {
