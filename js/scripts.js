@@ -935,7 +935,7 @@ updateVisitCounter();
 const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
-    const inputs = contactForm.querySelectorAll('input, textarea');
+    const inputs = contactForm.querySelectorAll('input:not([name="_honey"]), textarea');
     
     inputs.forEach(input => {
         input.addEventListener('blur', () => validateField(input));
@@ -957,7 +957,13 @@ if (contactForm) {
         
         if (!isValid) {
             e.preventDefault();
+            // Scroll al primer error
+            const firstError = contactForm.querySelector('.error');
+            if (firstError) {
+                firstError.focus();
+            }
         }
+        // Si isValid es true, el formulario se enviará normalmente
     });
 }
 
