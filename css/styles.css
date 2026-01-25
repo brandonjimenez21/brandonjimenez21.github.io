@@ -606,12 +606,14 @@ body.dark-mode .code-particles-canvas {
 .profile-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: 75% center;
     border-radius: 50%;
     border: 5px solid white;
     box-shadow: var(--shadow-xl);
     position: relative;
     z-index: 2;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
 }
 
 .floating-shape {
