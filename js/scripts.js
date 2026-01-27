@@ -52,6 +52,32 @@ if ('serviceWorker' in navigator) {
 }
 
 // ===================================
+// UTILITY FUNCTIONS - PERFORMANCE
+// ===================================
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// ===================================
 // MATRIX PRELOADER
 // ===================================
 const matrixPreloader = document.getElementById('matrix-preloader');
@@ -103,7 +129,8 @@ if (preloaderCanvas) {
     }
     
     const preloaderParticles = [];
-    for (let i = 0; i < 40; i++) {
+    const particleCount = window.innerWidth > 768 ? 40 : 20; // Menos partículas en móvil
+    for (let i = 0; i < particleCount; i++) {
         preloaderParticles.push(new PreloaderParticle());
     }
     
@@ -146,7 +173,7 @@ if (codeParticlesCanvas) {
         codeParticlesCanvas.height = codeParticlesCanvas.offsetHeight;
     }
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', debounce(resizeCanvas, 250));
     
     // Code symbols
     const symbols = ['<', '>', '{', '}', '[', ']', '(', ')', ';', '=', '+', '-', '*', '/', '&', '|', '$', '#', '@'];
@@ -192,7 +219,7 @@ if (codeParticlesCanvas) {
     }
     
     // Create particles
-    const particleCount = 30;
+    const particleCount = window.innerWidth > 768 ? 30 : 15; // Menos en móvil
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
         particles.push(new CodeParticle());
@@ -247,7 +274,7 @@ function scrollHeader() {
     }
 }
 
-window.addEventListener('scroll', scrollHeader);
+window.addEventListener('scroll', throttle(scrollHeader, 10));
 
 // ===================================
 // MENÚ MÓVIL: TOGGLE
@@ -284,7 +311,7 @@ function scrollActive() {
     });
 }
 
-window.addEventListener('scroll', scrollActive);
+window.addEventListener('scroll', throttle(scrollActive, 100));
 
 // ===================================
 // SMOOTH SCROLL PARA ENLACES
@@ -467,55 +494,9 @@ function createBackToTop() {
 createBackToTop();
 
 // ===================================
-// CURSOR PERSONALIZADO (OPCIONAL)
-// ===================================
-function createCustomCursor() {
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    cursor.style.cssText = `
-        width: 20px;
-        height: 20px;
-        border: 2px solid var(--primary-color);
-        border-radius: 50%;
-        position: fixed;
-        pointer-events: none;
-        z-index: 9999;
-        transition: transform 0.2s ease;
-        display: none;
-    `;
-    
-    document.body.appendChild(cursor);
-    
-    // Solo en pantallas grandes
-    if (window.innerWidth > 768) {
-        cursor.style.display = 'block';
-        
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
-        });
-        
-        document.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'scale(2)';
-                cursor.style.background = 'rgba(99, 102, 241, 0.2)';
-            });
-            
-            el.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'scale(1)';
-                cursor.style.background = 'transparent';
-            });
-        });
-    }
-}
-
-// Activar cursor personalizado (opcional - puedes comentar si no lo quieres)
-// createCustomCursor();
-
-// ===================================
 // PARALLAX EFFECT (OPCIONAL)
 // ===================================
-window.addEventListener('scroll', () => {
+window.addEventListener('scroll', throttle(() => {
     const scrolled = window.pageYOffset;
     const parallaxElements = document.querySelectorAll('.floating-shape');
     
@@ -523,7 +504,7 @@ window.addEventListener('scroll', () => {
         const speed = (index + 1) * 0.1;
         el.style.transform = `translateY(${scrolled * speed}px)`;
     });
-});
+}, 16)); // ~60fps
 
 // ===================================
 // PRELOADER (OPCIONAL)
@@ -605,11 +586,6 @@ const translations = {
         'Happy Clients': 'Clientes Satisfechos',
         'Cups of Coffee': 'Tazas de Café',
         'Years of Experience': 'Años de Experiencia',
-        'Leave a Comment': 'Deja un Comentario',
-        'Share your thoughts or feedback': 'Comparte tus pensamientos o feedback',
-        'Be the first to leave a comment!': '¡Sé el primero en dejar un comentario!',
-        'Leave Your Comment': 'Deja tu Comentario',
-        'Post Comment': 'Publicar Comentario',
         'Hobbies & Interests': 'Hobbies e Intereses',
         'What I enjoy doing in my free time': 'Lo que disfruto hacer en mi tiempo libre',
         'Reading': 'Lectura',
@@ -734,90 +710,7 @@ if (statsSection) {
 }
 
 // ===================================
-// PARTICLES BACKGROUND
-// ===================================
-const canvas = document.getElementById('particles-canvas');
-const ctx = canvas.getContext('2d');
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-const particles = [];
-const particleCount = 50;
-
-class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = `rgba(99, 102, 241, ${Math.random() * 0.5})`;
-    }
-    
-    update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        if (this.y < 0) this.y = canvas.height;
-    }
-    
-    draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-function initParticles() {
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
-}
-
-function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-    });
-    
-    // Conectar partículas cercanas
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < 100) {
-                ctx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 100)})`;
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-            }
-        }
-    }
-    
-    requestAnimationFrame(animateParticles);
-}
-
-initParticles();
-animateParticles();
-
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
-
-// ===================================
-// CUSTOM CURSOR (OPTIONAL)
+// CUSTOM CURSOR
 // ===================================
 function initCustomCursor() {
     if (window.innerWidth > 768 && !('ontouchstart' in window)) {
@@ -843,8 +736,8 @@ function initCustomCursor() {
         function animate() {
             cursorX += (mouseX - cursorX) * 0.3;
             cursorY += (mouseY - cursorY) * 0.3;
-            followerX += (mouseX - followerX) * 0.1;
-            followerY += (mouseY - followerY) * 0.1;
+            followerX += (mouseX - followerX) * 0.3;
+            followerY += (mouseY - followerY) * 0.3;
             
             cursor.style.left = cursorX + 'px';
             cursor.style.top = cursorY + 'px';
@@ -873,11 +766,6 @@ function initCustomCursor() {
 
 // Activar cursor personalizado
 initCustomCursor();
-
-// ===================================
-// GLASSMORPHISM EFFECTS
-// ===================================
-document.body.classList.add('glassmorphism');
 
 // ===================================
 // SHARE BUTTONS
@@ -1301,79 +1189,7 @@ tiltCards.forEach(card => {
 // FUTURISTIC EFFECTS IMPLEMENTATION
 // ===================================
 
-// 1. STARFIELD ANIMATION
-// ===================================
-const starfieldCanvas = document.getElementById('starfield');
-if (starfieldCanvas) {
-    const starCtx = starfieldCanvas.getContext('2d');
-    let stars = [];
-    const numStars = 200;
-    
-    function resizeStarfield() {
-        starfieldCanvas.width = window.innerWidth;
-        starfieldCanvas.height = window.innerHeight;
-        initStars();
-    }
-    
-    function initStars() {
-        stars = [];
-        for (let i = 0; i < numStars; i++) {
-            stars.push({
-                x: Math.random() * starfieldCanvas.width,
-                y: Math.random() * starfieldCanvas.height,
-                z: Math.random() * starfieldCanvas.width,
-                size: Math.random() * 2,
-                speed: Math.random() * 0.5 + 0.1
-            });
-        }
-    }
-    
-    function animateStars() {
-        starCtx.fillStyle = 'rgba(15, 23, 42, 0.1)';
-        starCtx.fillRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
-        
-        const centerX = starfieldCanvas.width / 2;
-        const centerY = starfieldCanvas.height / 2;
-        
-        stars.forEach(star => {
-            star.z -= star.speed;
-            
-            if (star.z <= 0) {
-                star.z = starfieldCanvas.width;
-                star.x = Math.random() * starfieldCanvas.width;
-                star.y = Math.random() * starfieldCanvas.height;
-            }
-            
-            const k = 128 / star.z;
-            const px = (star.x - centerX) * k + centerX;
-            const py = (star.y - centerY) * k + centerY;
-            
-            const size = (1 - star.z / starfieldCanvas.width) * star.size;
-            const opacity = (1 - star.z / starfieldCanvas.width) * 0.8;
-            
-            starCtx.fillStyle = `rgba(99, 102, 241, ${opacity})`;
-            starCtx.beginPath();
-            starCtx.arc(px, py, size, 0, Math.PI * 2);
-            starCtx.fill();
-            
-            // Twinkle effect
-            if (Math.random() > 0.99) {
-                starCtx.fillStyle = `rgba(236, 72, 153, ${opacity})`;
-                starCtx.beginPath();
-                starCtx.arc(px, py, size * 1.5, 0, Math.PI * 2);
-                starCtx.fill();
-            }
-        });
-        
-        requestAnimationFrame(animateStars);
-    }
-    
-    resizeStarfield();
-    window.addEventListener('resize', resizeStarfield);
-    animateStars();
-}
-
-// 2. LAVA LAMP BACKGROUND
+// 1. LAVA LAMP BACKGROUND
 // ===================================
 const blobCanvas = document.getElementById('blobMorph');
 if (blobCanvas) {
@@ -1397,7 +1213,9 @@ if (blobCanvas) {
             'rgba(249, 115, 22, 0.6)'
         ];
         
-        for (let i = 0; i < numLavaBlobs; i++) {
+        const blobCount = window.innerWidth > 768 ? numLavaBlobs : Math.max(2, Math.floor(numLavaBlobs / 2));
+        
+        for (let i = 0; i < blobCount; i++) {
             lavaBlobs.push({
                 x: Math.random() * blobCanvas.width,
                 y: blobCanvas.height + Math.random() * 200,
@@ -1458,7 +1276,7 @@ if (blobCanvas) {
     animateBlobs();
 }
 
-// 3. CURSOR PARTICLES
+// 2. CURSOR PARTICLES
 // ===================================
 const particleCanvas = document.getElementById('cursorParticles');
 if (particleCanvas) {
@@ -1510,8 +1328,9 @@ if (particleCanvas) {
     function animateParticles() {
         pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
         
-        // Create new particles at mouse position
-        if (particles.length < 100) {
+        // Create new particles at mouse position (limitar cantidad)
+        const maxParticles = window.innerWidth > 768 ? 100 : 50;
+        if (particles.length < maxParticles) {
             particles.push(new Particle(mouse.x, mouse.y));
         }
         
@@ -1553,7 +1372,7 @@ if (particleCanvas) {
     animateParticles();
 }
 
-// 4. EYE FOLLOWING CURSOR
+// 3. EYE FOLLOWING CURSOR
 // ===================================
 const eyeContainer = document.getElementById('eyeFollower');
 if (eyeContainer) {
@@ -1604,7 +1423,7 @@ if (eyeContainer) {
     setTimeout(randomBlink, 2000);
 }
 
-// 5. SHAKE TO RANDOMIZE THEME
+// 4. SHAKE TO RANDOMIZE THEME
 // ===================================
 let shakeDetectionEnabled = true;
 let lastShakeTime = 0;
@@ -1693,7 +1512,7 @@ function showNotification(message) {
 console.log('✨ Futuristic effects loaded! Shake device or triple-click to randomize theme!');
 
 // ===================================
-// PERFORMANCE: REDUCIR ANIMACIONES
+// PERFORMANCE OPTIMIZATION
 // ===================================
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.style.setProperty('--transition-fast', '0s');

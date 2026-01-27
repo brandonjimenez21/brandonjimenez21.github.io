@@ -1,5 +1,8 @@
-// Service Worker para modo offline
-const CACHE_NAME = 'portfolio-cache-v7';
+// Service Worker para modo offline - OPTIMIZADO
+const CACHE_NAME = 'portfolio-cache-v8';
+const CACHE_IMAGES = 'portfolio-images-v1';
+const CACHE_FONTS = 'portfolio-fonts-v1';
+
 const urlsToCache = [
     '/',
     '/index.html',
@@ -8,9 +11,12 @@ const urlsToCache = [
     '/assets/favicon.ico',
     '/manifest.json',
     '/assets/fonts/fontawesome.min.css',
-    '/assets/fonts/fa-solid-900.woff2',
-    '/assets/fonts/fa-brands-400.woff2',
-    '/assets/fonts/fa-regular-400.woff2'
+    '/assets/yo.png'
+];
+
+// URLs externas importantes
+const externalUrls = [
+    'https://images.unsplash.com/'
 ];
 
 // Instalación del Service Worker
@@ -33,12 +39,15 @@ self.addEventListener('install', (event) => {
 // Activación del Service Worker
 self.addEventListener('activate', (event) => {
     console.log('Service Worker: Activando...');
+    
+    const cacheWhitelist = [CACHE_NAME, CACHE_IMAGES, CACHE_FONTS];
+    
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
-                    // Eliminar cachés antiguas
-                    if (cacheName !== CACHE_NAME) {
+                    // Eliminar cachés que no están en la whitelist
+                    if (!cacheWhitelist.includes(cacheName)) {
                         console.log('Service Worker: Eliminando caché antigua:', cacheName);
                         return caches.delete(cacheName);
                     }
@@ -50,7 +59,7 @@ self.addEventListener('activate', (event) => {
     return self.clients.claim();
 });
 
-// Interceptar peticiones (estrategia Network First para archivos principales)
+// Interceptar peticiones (estrategia optimizada)
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     
@@ -60,6 +69,47 @@ self.addEventListener('fetch', (event) => {
         event.request.url.includes('.css') ||
         event.request.url.includes('.js') ||
         event.request.url === self.location.origin + '/';
+    
+    // Cache First para imágenes
+    if (event.request.destination === 'image') {
+        event.respondWith(
+            caches.open(CACHE_IMAGES).then((cache) => {
+                return cache.match(event.request).then((response) => {
+                    return response || fetch(event.request).then((networkResponse) => {
+                        // Solo cachear imágenes exitosas
+                        if (networkResponse && networkResponse.status === 200) {
+                            cache.put(event.request, networkResponse.clone());
+                        }
+                        return networkResponse;
+                    }).catch(() => {
+                        // Placeholder para imágenes offline
+                        return new Response(
+                            '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#f1f5f9"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#64748b" font-family="Arial" font-size="18">Imagen no disponible</text></svg>',
+                            { headers: { 'Content-Type': 'image/svg+xml' } }
+                        );
+                    });
+                });
+            })
+        );
+        return;
+    }
+    
+    // Cache First para fuentes
+    if (event.request.url.includes('/fonts/') || event.request.destination === 'font') {
+        event.respondWith(
+            caches.open(CACHE_FONTS).then((cache) => {
+                return cache.match(event.request).then((response) => {
+                    return response || fetch(event.request).then((networkResponse) => {
+                        if (networkResponse && networkResponse.status === 200) {
+                            cache.put(event.request, networkResponse.clone());
+                        }
+                        return networkResponse;
+                    });
+                });
+            })
+        );
+        return;
+    }
     
     if (isMainResource) {
         event.respondWith(

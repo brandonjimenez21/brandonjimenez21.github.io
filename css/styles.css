@@ -164,6 +164,17 @@ img {
     display: block;
 }
 
+/* Optimización de imágenes lazy loading */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+img[loading="lazy"].loaded,
+img[loading="lazy"][src] {
+    opacity: 1;
+}
+
 a {
     text-decoration: none;
     color: inherit;
@@ -620,6 +631,8 @@ body.dark-mode .code-particles-canvas {
     position: absolute;
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
     animation: float 6s ease-in-out infinite;
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .shape-1 {
@@ -987,6 +1000,18 @@ body.dark-mode .matrix-preloader {
     box-shadow: var(--shadow-md);
     transition: all var(--transition-normal);
     position: relative;
+}
+
+.skill-card,
+.project-card,
+.hobby-card {
+    transition: all var(--transition-normal);
+}
+
+.skill-card:hover,
+.project-card:hover,
+.hobby-card:hover {
+    will-change: transform;
 }
 
 .skill-category:hover {
@@ -1608,113 +1633,6 @@ body.dark-mode .contact-social a {
 }
 
 /* ===================================
-   COMMENTS SECTION
-   =================================== */
-.testimonials {
-    background: var(--bg-secondary);
-}
-
-.comments-wrapper {
-    max-width: 900px;
-    margin: 3rem auto 0;
-}
-
-.comments-display {
-    margin-bottom: 3rem;
-}
-
-.no-comments {
-    text-align: center;
-    padding: 3rem;
-    background: var(--bg-primary);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-}
-
-.no-comments i {
-    font-size: 3rem;
-    color: var(--primary-color);
-    opacity: 0.3;
-    margin-bottom: 1rem;
-}
-
-.no-comments p {
-    color: var(--text-secondary);
-    font-size: 1.125rem;
-}
-
-.comment-card {
-    background: var(--bg-primary);
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    margin-bottom: 1rem;
-    animation: fadeInUp 0.5s ease;
-}
-
-.comment-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.comment-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: var(--radius-full);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.25rem;
-    font-weight: 700;
-}
-
-.comment-info h4 {
-    color: var(--text-primary);
-    font-size: 1rem;
-    margin-bottom: 0.25rem;
-}
-
-.comment-date {
-    color: var(--text-light);
-    font-size: 0.875rem;
-}
-
-.comment-text {
-    color: var(--text-secondary);
-    line-height: 1.6;
-}
-
-.comment-form-container {
-    background: var(--bg-primary);
-    padding: 2rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-}
-
-.comment-form-container h3 {
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-}
-
-.comment-form .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-@media (max-width: 768px) {
-    .comment-form .form-row {
-        grid-template-columns: 1fr;
-    }
-}
-
-
-/* ===================================
    HOBBIES SECTION
    =================================== */
 .hobbies-grid {
@@ -1855,25 +1773,6 @@ body.dark-mode .footer {
 }
 
 /* ===================================
-   PRELOADER - DESACTIVADO
-   =================================== */
-/* Preloader removido porque la página carga muy rápido */
-
-/* ===================================
-   PARTICLES CANVAS
-   =================================== */
-#particles-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-    opacity: 0.3;
-}
-
-/* ===================================
    CUSTOM CURSOR
    =================================== */
 body.custom-cursor {
@@ -1915,28 +1814,6 @@ body.custom-cursor * {
 
 .cursor-follower.active {
     transform: translate(-50%, -50%) scale(1.5);
-}
-
-/* ===================================
-   GLASSMORPHISM EFFECTS
-   =================================== */
-body.glassmorphism .skill-card,
-body.glassmorphism .project-card,
-body.glassmorphism .comment-card,
-body.glassmorphism .hobby-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(99, 102, 241, 0.1);
-}
-
-body.glassmorphism.dark-mode .skill-card,
-body.glassmorphism.dark-mode .project-card,
-body.glassmorphism.dark-mode .comment-card,
-body.glassmorphism.dark-mode .hobby-card {
-    background: rgba(30, 41, 59, 0.5);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ===================================
@@ -1991,125 +1868,6 @@ body.glassmorphism.dark-mode .hobby-card {
 .form-group textarea.success ~ .validation-icon {
     display: block;
     color: #10b981;
-}
-
-/* ===================================
-   ANIMATED BLOBS
-   =================================== */
-.blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.3;
-    animation: blob-float 20s ease-in-out infinite;
-    z-index: 0;
-}
-
-.blob-1 {
-    width: 500px;
-    height: 500px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    top: -10%;
-    left: -10%;
-    animation-delay: 0s;
-}
-
-.blob-2 {
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-    bottom: -10%;
-    right: -10%;
-    animation-delay: -7s;
-}
-
-.blob-3 {
-    width: 350px;
-    height: 350px;
-    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-    top: 50%;
-    left: 50%;
-    animation-delay: -14s;
-}
-
-@keyframes blob-float {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    33% {
-        transform: translate(30px, -50px) scale(1.1);
-    }
-    66% {
-        transform: translate(-20px, 20px) scale(0.9);
-    }
-}
-
-body.dark-mode .blob {
-    opacity: 0.15;
-}
-
-/* ===================================
-   VIDEO BACKGROUND
-   =================================== */
-.hero-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.15;
-    z-index: 0;
-    pointer-events: none;
-}
-
-body.dark-mode .hero-video {
-    opacity: 0.10;
-}
-
-/* ===================================
-   GLITCH EFFECT
-   =================================== */
-.logo:hover,
-.hero-title:hover {
-    animation: glitch 0.3s ease-in-out;
-}
-
-@keyframes glitch {
-    0% {
-        transform: translate(0);
-    }
-    20% {
-        transform: translate(-2px, 2px);
-    }
-    40% {
-        transform: translate(-2px, -2px);
-    }
-    60% {
-        transform: translate(2px, 2px);
-    }
-    80% {
-        transform: translate(2px, -2px);
-    }
-    100% {
-        transform: translate(0);
-    }
-}
-
-/* ===================================
-   TILT EFFECT FOR CARDS
-   =================================== */
-.skill-card,
-.project-card,
-.hobby-card {
-    transform-style: preserve-3d;
-    transition: transform 0.1s ease;
-}
-
-.skill-card:hover,
-.project-card:hover,
-.hobby-card:hover {
-    transform: perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg)) scale(1.02);
 }
 
 /* ===================================
@@ -2354,12 +2112,6 @@ body.dark-mode .hero-video {
     width: 100%;
     height: 100%;
     pointer-events: none;
-}
-
-/* Starfield - Layer 1 (deepest) */
-#starfield {
-    z-index: -4;
-    background: transparent;
 }
 
 /* Lava Lamp - Layer 2 */
