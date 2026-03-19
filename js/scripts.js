@@ -709,63 +709,6 @@ if (statsSection) {
     statsObserver.observe(statsSection);
 }
 
-// ===================================
-// CUSTOM CURSOR
-// ===================================
-function initCustomCursor() {
-    if (window.innerWidth > 768 && !('ontouchstart' in window)) {
-        document.body.classList.add('custom-cursor');
-        
-        const cursor = document.createElement('div');
-        cursor.className = 'cursor';
-        document.body.appendChild(cursor);
-        
-        const follower = document.createElement('div');
-        follower.className = 'cursor-follower';
-        document.body.appendChild(follower);
-        
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
-        let followerX = 0, followerY = 0;
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-        
-        function animate() {
-            cursorX += (mouseX - cursorX) * 0.3;
-            cursorY += (mouseY - cursorY) * 0.3;
-            followerX += (mouseX - followerX) * 0.3;
-            followerY += (mouseY - followerY) * 0.3;
-            
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            follower.style.left = followerX + 'px';
-            follower.style.top = followerY + 'px';
-            
-            requestAnimationFrame(animate);
-        }
-        
-        animate();
-        
-        // Efectos hover
-        const hoverElements = document.querySelectorAll('a, button, .project-card, .skill-card');
-        hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.classList.add('active');
-                follower.classList.add('active');
-            });
-            el.addEventListener('mouseleave', () => {
-                cursor.classList.remove('active');
-                follower.classList.remove('active');
-            });
-        });
-    }
-}
-
-// Activar cursor personalizado
-initCustomCursor();
 
 // ===================================
 // SHARE BUTTONS
@@ -824,7 +767,7 @@ const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
     const inputs = contactForm.querySelectorAll('input:not([name="_honey"]), textarea');
-    
+
     inputs.forEach(input => {
         input.addEventListener('blur', () => validateField(input));
         input.addEventListener('input', () => {
@@ -833,25 +776,67 @@ if (contactForm) {
             }
         });
     });
-    
-    contactForm.addEventListener('submit', function(e) {
+
+    function showStatus(message, isSuccess) {
+        // Mensaje visual adicional (toast)
+        showFormToast(message, isSuccess);
+    }
+
+    function showFormToast(message, isSuccess) {
+        const toast = document.createElement('div');
+        toast.className = `form-toast ${isSuccess ? 'success' : 'error'}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('visible');
+        }, 50);
+
+        setTimeout(() => {
+            toast.classList.remove('visible');
+            setTimeout(() => toast.remove(), 400);
+        }, 4000);
+    }
+
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
         let isValid = true;
-        
         inputs.forEach(input => {
             if (!validateField(input)) {
                 isValid = false;
             }
         });
-        
+
         if (!isValid) {
-            e.preventDefault();
-            // Scroll al primer error
             const firstError = contactForm.querySelector('.error');
-            if (firstError) {
-                firstError.focus();
-            }
+            if (firstError) firstError.focus();
+            showStatus('Por favor corrige los errores antes de enviar.', false);
+            return;
         }
-        // Si isValid es true, el formulario se enviará normalmente
+
+        showStatus('Enviando mensaje...', true);
+
+        try {
+            const response = await fetch('https://formsubmit.co/ajax/brandonjimenez.dev@gmail.com', {
+                method: 'POST',
+                body: new FormData(contactForm),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || 'Error al enviar el mensaje.');
+            }
+
+            showStatus('✅ Mensaje enviado. Gracias por contactarme.', true);
+            contactForm.reset();
+        } catch (error) {
+            console.error('Error al enviar formulario:', error);
+            showStatus('❌ No se pudo enviar el mensaje. Intenta de nuevo más tarde.', false);
+        }
     });
 }
 
@@ -1372,56 +1357,6 @@ if (particleCanvas) {
     animateParticles();
 }
 
-// 3. EYE FOLLOWING CURSOR
-// ===================================
-const eyeContainer = document.getElementById('eyeFollower');
-if (eyeContainer) {
-    const pupil = eyeContainer.querySelector('.pupil');
-    const eye = eyeContainer.querySelector('.eye');
-    
-    window.addEventListener('mousemove', (e) => {
-        const eyeRect = eye.getBoundingClientRect();
-        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-        
-        // Calcular ángulo desde el centro del ojo al cursor
-        const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
-        
-        // Limitar el movimiento para que no se salga del ojo
-        // El ojo es más ancho que alto, así que limitamos diferente en X y Y
-        const maxDistanceX = eyeRect.width / 8;  // Movimiento horizontal más limitado
-        const maxDistanceY = eyeRect.height / 10; // Movimiento vertical aún más limitado
-        
-        // Calcular desplazamiento con límites diferentes para X e Y
-        let irisX = Math.cos(angle) * maxDistanceX;
-        let irisY = Math.sin(angle) * maxDistanceY;
-        
-        // Asegurar que no se salga (doble verificación)
-        irisX = Math.max(-maxDistanceX, Math.min(maxDistanceX, irisX));
-        irisY = Math.max(-maxDistanceY, Math.min(maxDistanceY, irisY));
-        
-        // Mover todo el conjunto (iris + pupila) juntos
-        pupil.style.transform = `translate(calc(-50% + ${irisX}px), calc(-50% + ${irisY}px))`;
-    });
-    
-    // Función de parpadeo
-    function blink() {
-        eye.classList.add('blinking');
-        setTimeout(() => {
-            eye.classList.remove('blinking');
-        }, 180); // Duración del parpadeo
-    }
-    
-    // Parpadeo aleatorio cada 3-7 segundos
-    function randomBlink() {
-        blink();
-        const nextBlink = Math.random() * 4000 + 3000; // Entre 3 y 7 segundos
-        setTimeout(randomBlink, nextBlink);
-    }
-    
-    // Iniciar parpadeos aleatorios después de 2 segundos
-    setTimeout(randomBlink, 2000);
-}
 
 // 4. SHAKE TO RANDOMIZE THEME
 // ===================================

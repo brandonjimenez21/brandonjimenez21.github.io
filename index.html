@@ -17,7 +17,8 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     
-
+    <link rel="preload" as="image" href="assets/yo.webp" fetchpriority="high">
+    <link rel="preload" as="font" href="assets/fonts/google-fonts.css" crossorigin>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="assets/fonts/fontawesome.min.css">
@@ -44,15 +45,6 @@
 
     <!-- Futuristic Background Effects -->
     <canvas id="blobMorph" class="background-effect"></canvas>
-    
-    <!-- Eye Following Cursor (in corner) -->
-    <div id="eyeFollower" class="eye-container">
-        <div class="eye">
-            <div class="pupil"></div>
-            <div class="eyelid-top"></div>
-            <div class="eyelid-bottom"></div>
-        </div>
-    </div>
 
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
@@ -137,7 +129,7 @@
                         <div class="floating-shape shape-1"></div>
                         <div class="floating-shape shape-2"></div>
                         <div class="floating-shape shape-3"></div>
-                        <img src="assets/yo.webp" alt="Brandon Jimenez" class="profile-img" loading="lazy">
+                        <img src="assets/yo.webp" alt="Brandon Jimenez" class="profile-img" width="400" height="400" loading="lazy">
                     </div>
                 </div>
             </div>
