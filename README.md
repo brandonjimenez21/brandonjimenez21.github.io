@@ -22,7 +22,6 @@
 - **Modo Oscuro (Dark Mode)**: Toggle con persistencia en localStorage
 - **Bilingüe (ES/EN)**: Cambio de idioma completo sin recargar
 - **Preloader Minimalista**: Animación de código escribiéndose
-- **Cursor Personalizado**: Efecto profesional en desktop
 - **Glassmorphism**: Efectos de vidrio esmerilado en tarjetas
 - **Partículas de Fondo**: Animación sutil con Canvas API
 - **Easter Egg**: Sorpresa con CTRL+SHIFT+F
