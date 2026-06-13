@@ -1,9 +1,5 @@
-// ===================================
-// SERVICE WORKER REGISTRATION (PWA)
-// ===================================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // Solo registrar en producción (no en localhost/127.0.0.1/file://)
         const isProduction = 
             !window.location.hostname.match(/localhost|127\.0\.0\.1|^\d+\.\d+\.\d+\.\d+$/) &&
             window.location.protocol !== 'file:';
@@ -11,16 +7,12 @@ if ('serviceWorker' in navigator) {
         if (isProduction) {
             navigator.serviceWorker.register('/service-worker.js')
                 .then((registration) => {
-                    console.log('✅ Service Worker registrado:', registration.scope);
-                    
-                    // Verificar actualizaciones
                     registration.addEventListener('updatefound', () => {
                         const newWorker = registration.installing;
-                        console.log('🔄 Nueva versión del Service Worker encontrada');
                         
                         newWorker.addEventListener('statechange', () => {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                console.log('📥 Nueva versión disponible. Recarga para actualizar.');
+                                // Service Worker updated
                             }
                         });
                     });
@@ -29,31 +21,21 @@ if ('serviceWorker' in navigator) {
                     console.error('❌ Error al registrar Service Worker:', error);
                 });
         } else {
-            console.log('🔧 Modo desarrollo - Service Worker deshabilitado');
-            
-            // Desregistrar cualquier Service Worker existente en desarrollo
             navigator.serviceWorker.getRegistrations().then(registrations => {
                 registrations.forEach(registration => {
                     registration.unregister();
-                    console.log('🗑️ Service Worker desregistrado en modo desarrollo');
                 });
             });
         }
     });
-    
-    // Detectar si está offline
+
     window.addEventListener('offline', () => {
-        console.log('📵 Modo offline activado');
     });
     
     window.addEventListener('online', () => {
-        console.log('🌐 Conexión restaurada');
     });
 }
 
-// ===================================
-// UTILITY FUNCTIONS - PERFORMANCE
-// ===================================
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -77,12 +59,8 @@ function throttle(func, limit) {
     };
 }
 
-// ===================================
-// MATRIX PRELOADER
-// ===================================
 const matrixPreloader = document.getElementById('matrix-preloader');
 
-// Preloader particles animation
 const preloaderCanvas = document.getElementById('preloaderParticles');
 let preloaderAnimationRunning = true;
 
@@ -129,7 +107,7 @@ if (preloaderCanvas) {
     }
     
     const preloaderParticles = [];
-    const particleCount = window.innerWidth > 768 ? 40 : 20; // Menos partículas en móvil
+    const particleCount = window.innerWidth > 768 ? 40 : 20;
     for (let i = 0; i < particleCount; i++) {
         preloaderParticles.push(new PreloaderParticle());
     }
@@ -149,7 +127,6 @@ if (preloaderCanvas) {
     animatePreloaderParticles();
 }
 
-// Ocultar preloader después de la animación
 window.addEventListener('load', () => {
     setTimeout(() => {
         preloaderAnimationRunning = false;
@@ -157,12 +134,9 @@ window.addEventListener('load', () => {
         setTimeout(() => {
             matrixPreloader.style.display = 'none';
         }, 500);
-    }, 3000); // 3 segundos de animación
+    }, 3000); 
 });
 
-// ===================================
-// CODE PARTICLES ANIMATION
-// ===================================
 const codeParticlesCanvas = document.getElementById('codeParticles');
 if (codeParticlesCanvas) {
     const ctx = codeParticlesCanvas.getContext('2d');
@@ -193,9 +167,8 @@ if (codeParticlesCanvas) {
             this.size = Math.random() * 12 + 10;
             this.alpha = Math.random() * 0.4 + 0.6;
             
-            // Get current colors from CSS
             const isDark = document.body.classList.contains('dark-mode');
-            const colors = ['#6366f1', '#ec4899', '#a855f7']; // indigo, pink, purple
+            const colors = ['#6366f1', '#ec4899', '#a855f7']; 
             this.color = colors[Math.floor(Math.random() * colors.length)];
         }
         
@@ -203,7 +176,6 @@ if (codeParticlesCanvas) {
             this.x += this.vx;
             this.y += this.vy;
             
-            // Wrap around edges
             if (this.x < -20) this.x = codeParticlesCanvas.width + 20;
             if (this.x > codeParticlesCanvas.width + 20) this.x = -20;
             if (this.y < -20) this.y = codeParticlesCanvas.height + 20;
@@ -218,14 +190,12 @@ if (codeParticlesCanvas) {
         }
     }
     
-    // Create particles
-    const particleCount = window.innerWidth > 768 ? 30 : 15; // Menos en móvil
+    const particleCount = window.innerWidth > 768 ? 30 : 15;
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
         particles.push(new CodeParticle());
     }
     
-    // Animation loop
     function animateCodeParticles() {
         ctx.clearRect(0, 0, codeParticlesCanvas.width, codeParticlesCanvas.height);
         
@@ -240,7 +210,6 @@ if (codeParticlesCanvas) {
     
     animateCodeParticles();
     
-    // Update particle colors on theme change
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
@@ -254,18 +223,12 @@ if (codeParticlesCanvas) {
     }
 }
 
-// ===================================
-// CONFIGURACIÓN Y VARIABLES
-// ===================================
 const navbar = document.getElementById('navbar');
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.getElementById('nav-menu');
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('section[id]');
 
-// ===================================
-// NAVBAR: SCROLL Y TRANSPARENCIA
-// ===================================
 function scrollHeader() {
     if (window.scrollY >= 50) {
         navbar.classList.add('scrolled');
@@ -276,15 +239,11 @@ function scrollHeader() {
 
 window.addEventListener('scroll', throttle(scrollHeader, 10));
 
-// ===================================
-// MENÚ MÓVIL: TOGGLE
-// ===================================
 navToggle.addEventListener('click', () => {
     navMenu.classList.toggle('active');
     navToggle.classList.toggle('active');
 });
 
-// Cerrar menú al hacer click en un enlace
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
         navMenu.classList.remove('active');
@@ -292,9 +251,6 @@ navLinks.forEach(link => {
     });
 });
 
-// ===================================
-// NAVEGACIÓN ACTIVA POR SECCIÓN
-// ===================================
 function scrollActive() {
     const scrollY = window.pageYOffset;
 
@@ -313,9 +269,6 @@ function scrollActive() {
 
 window.addEventListener('scroll', throttle(scrollActive, 100));
 
-// ===================================
-// SMOOTH SCROLL PARA ENLACES
-// ===================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -331,9 +284,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===================================
-// ANIMACIÓN DE ESCRITURA (TYPING)
-// ===================================
 const typingText = document.querySelector('.typing-text');
 const roles = [
     'Desarrollador Full Stack',
@@ -362,7 +312,6 @@ function typeRole() {
     }
     
     if (!isDeleting && charIndex === currentRole.length) {
-        // Pausa al final de la palabra
         typingDelay = 2000;
         isDeleting = true;
     } else if (isDeleting && charIndex === 0) {
@@ -374,14 +323,10 @@ function typeRole() {
     setTimeout(typeRole, typingDelay);
 }
 
-// Iniciar animación de escritura
 if (typingText) {
     setTimeout(typeRole, 1000);
 }
 
-// ===================================
-// ANIMACIONES AL HACER SCROLL
-// ===================================
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -100px 0px'
@@ -395,21 +340,12 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observar elementos para animación
 const animateElements = document.querySelectorAll(
     '.skill-category, .project-card, .contact-item, .about-text, .about-image'
 );
 
 animateElements.forEach(el => observer.observe(el));
 
-// ===================================
-// FORMULARIO DE CONTACTO - Ahora manejado en la sección de validación más abajo
-// ===================================
-// El formulario ahora tiene validación completa en la línea 678+
-
-// ===================================
-// CONTADOR DE SKILLS (ANIMACIÓN)
-// ===================================
 const skillItems = document.querySelectorAll('.skill-item');
 
 skillItems.forEach(item => {
@@ -418,9 +354,6 @@ skillItems.forEach(item => {
     });
 });
 
-// ===================================
-// LAZY LOADING PARA IMÁGENES
-// ===================================
 const images = document.querySelectorAll('img[data-src]');
 
 const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -436,9 +369,6 @@ const imageObserver = new IntersectionObserver((entries, observer) => {
 
 images.forEach(img => imageObserver.observe(img));
 
-// ===================================
-// BOTÓN BACK TO TOP (OPCIONAL)
-// ===================================
 function createBackToTop() {
     const backToTop = document.createElement('button');
     const icon = document.createElement('i');
@@ -490,12 +420,8 @@ function createBackToTop() {
     });
 }
 
-// Activar botón back to top
 createBackToTop();
 
-// ===================================
-// PARALLAX EFFECT (OPCIONAL)
-// ===================================
 window.addEventListener('scroll', throttle(() => {
     const scrolled = window.pageYOffset;
     const parallaxElements = document.querySelectorAll('.floating-shape');
@@ -504,13 +430,9 @@ window.addEventListener('scroll', throttle(() => {
         const speed = (index + 1) * 0.1;
         el.style.transform = `translateY(${scrolled * speed}px)`;
     });
-}, 16)); // ~60fps
+}, 16)); 
 
-// ===================================
-// PRELOADER (OPCIONAL)
-// ===================================
 window.addEventListener('load', () => {
-    // Ocultar preloader si existe
     const preloader = document.getElementById('preloader');
     if (preloader) {
         preloader.style.opacity = '0';
@@ -519,21 +441,15 @@ window.addEventListener('load', () => {
         }, 500);
     }
     
-    // Agregar clase loaded al body
     document.body.classList.add('loaded');
 });
 
-// ===================================
-// CONSOLE MESSAGE (EASTER EGG)
-// ===================================
+
 console.log('%c¡Hola Developer! 👋', 'color: #6366f1; font-size: 20px; font-weight: bold;');
 console.log('%c¿Curioseando el código? Me gusta tu estilo 😎', 'color: #64748b; font-size: 14px;');
 console.log('%cSi quieres contactarme, usa el formulario de contacto 📧', 'color: #64748b; font-size: 14px;');
 console.log('%cEaster Egg: Presiona CTRL + SHIFT + F para un mensaje secreto 🎉', 'color: #ec4899; font-size: 12px;');
 
-// ===================================
-// DARK MODE TOGGLE
-// ===================================
 const themeToggle = document.getElementById('theme-toggle');
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -553,9 +469,6 @@ if (themeToggle) {
     });
 }
 
-// ===================================
-// LANGUAGE TOGGLE
-// ===================================
 const langToggle = document.getElementById('lang-toggle');
 const translations = {
     es: {
@@ -622,7 +535,6 @@ function translatePage(lang) {
         if (lang === 'en') {
             el.textContent = el.getAttribute('data-en');
         } else {
-            // Usar data-es si existe, sino buscar en diccionario
             const esText = el.getAttribute('data-es');
             if (esText) {
                 el.textContent = esText;
@@ -633,7 +545,6 @@ function translatePage(lang) {
         }
     });
     
-    // Traducir placeholders
     const placeholders = document.querySelectorAll('[data-en-placeholder]');
     placeholders.forEach(el => {
         if (lang === 'en') {
@@ -665,14 +576,10 @@ if (langToggle) {
     });
 }
 
-// Aplicar idioma guardado
 if (currentLang === 'en') {
     translatePage('en');
 }
 
-// ===================================
-// STATISTICS COUNTER
-// ===================================
 const statNumbers = document.querySelectorAll('.stat-number');
 let counterStarted = false;
 
@@ -709,10 +616,6 @@ if (statsSection) {
     statsObserver.observe(statsSection);
 }
 
-
-// ===================================
-// SHARE BUTTONS
-// ===================================
 const shareButtons = document.querySelectorAll('.share-btn');
 
 shareButtons.forEach(btn => {
@@ -744,9 +647,6 @@ shareButtons.forEach(btn => {
     });
 });
 
-// ===================================
-// VISIT COUNTER
-// ===================================
 function updateVisitCounter() {
     let visits = localStorage.getItem('visits') || 0;
     visits = parseInt(visits) + 1;
@@ -760,9 +660,6 @@ function updateVisitCounter() {
 
 updateVisitCounter();
 
-// ===================================
-// FORM VALIDATION
-// ===================================
 const contactForm = document.getElementById('contact-form');
 
 if (contactForm) {
@@ -778,7 +675,6 @@ if (contactForm) {
     });
 
     function showStatus(message, isSuccess) {
-        // Mensaje visual adicional (toast)
         showFormToast(message, isSuccess);
     }
 
@@ -834,7 +730,6 @@ if (contactForm) {
             showStatus('✅ Mensaje enviado. Gracias por contactarme.', true);
             contactForm.reset();
         } catch (error) {
-            console.error('Error al enviar formulario:', error);
             showStatus('❌ No se pudo enviar el mensaje. Intenta de nuevo más tarde.', false);
         }
     });
@@ -846,7 +741,6 @@ function validateField(field) {
     let isValid = true;
     let errorMessage = '';
     
-    // Limpiar estados anteriores
     field.classList.remove('error', 'success');
     const existingError = field.parentElement.querySelector('.error-message');
     if (existingError) existingError.remove();
@@ -881,22 +775,17 @@ function validateField(field) {
     return isValid;
 }
 
-// ===================================
-// EASTER EGG - KONAMI CODE STYLE
-// ===================================
 let easterEggShown = false;
 
 document.addEventListener('keydown', (e) => {
-    // Detectar Ctrl + Shift + F presionados simultáneamente
     if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'f' && !easterEggShown) {
-        e.preventDefault(); // Prevenir el comportamiento por defecto (búsqueda del navegador)
+        e.preventDefault();
         easterEggShown = true;
         showSecretMessage();
     }
 });
 
 function showSecretMessage() {
-    // Crear overlay (fondo oscuro)
     const overlay = document.createElement('div');
     overlay.style.cssText = `
         position: fixed;
@@ -910,7 +799,6 @@ function showSecretMessage() {
         cursor: pointer;
     `;
     
-    // Crear contenedor del mensaje
     const messageBox = document.createElement('div');
     messageBox.style.cssText = `
         position: fixed;
@@ -928,17 +816,14 @@ function showSecretMessage() {
         pointer-events: auto;
     `;
     
-    // Crear título
     const title = document.createElement('h2');
     title.style.cssText = 'margin: 0 0 1rem 0; font-size: 2rem;';
     title.textContent = '🎉 ¡Encontraste el secreto! 🎉';
     
-    // Crear párrafo
     const text = document.createElement('p');
     text.style.cssText = 'margin: 0; font-size: 1.2rem;';
     text.textContent = 'Eres oficialmente un explorador ninja del código 🥷';
     
-    // Crear botón
     const button = document.createElement('button');
     button.style.cssText = `
         margin-top: 1rem;
@@ -955,7 +840,6 @@ function showSecretMessage() {
     `;
     button.textContent = '¡Genial!';
     
-    // Añadir efecto hover
     button.addEventListener('mouseenter', () => {
         button.style.transform = 'scale(1.1)';
         button.style.boxShadow = '0 5px 15px rgba(99, 102, 241, 0.4)';
@@ -966,33 +850,27 @@ function showSecretMessage() {
         button.style.boxShadow = 'none';
     });
     
-    // Función para cerrar el modal
     const closeModal = () => {
-        easterEggShown = false; // Permitir mostrar el easter egg de nuevo
+        easterEggShown = false; 
         overlay.remove();
         messageBox.remove();
     };
     
-    // Event listener del botón (con stopPropagation para evitar conflictos)
     button.addEventListener('click', (e) => {
         e.stopPropagation();
         closeModal();
     });
     
-    // Event listener del overlay (click en fondo oscuro)
     overlay.addEventListener('click', closeModal);
     
-    // Prevenir que clicks en el messageBox cierren el modal
     messageBox.addEventListener('click', (e) => {
         e.stopPropagation();
     });
     
-    // Ensamblar el modal
     messageBox.appendChild(title);
     messageBox.appendChild(text);
     messageBox.appendChild(button);
     
-    // Agregar al DOM
     document.body.appendChild(overlay);
     document.body.appendChild(messageBox);
     
@@ -1020,7 +898,6 @@ function confetti() {
         }, i * 30);
     }
     
-    // Agregar animación de confetti si no existe
     if (!document.getElementById('confetti-style')) {
         const style = document.createElement('style');
         style.id = 'confetti-style';
@@ -1051,9 +928,6 @@ function confetti() {
     }
 }
 
-// ===================================
-// TERMINAL INTERACTIVA
-// ===================================
 const terminalToggle = document.getElementById('terminal-toggle');
 const terminalContainer = document.getElementById('terminal-container');
 const terminalClose = document.getElementById('terminal-close');
@@ -1083,7 +957,6 @@ terminalClose.addEventListener('click', () => {
 
 terminalInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        // Sanitizar input: solo permitir caracteres alfanuméricos, espacios y guiones
         const rawCommand = terminalInput.value.trim();
         const command = rawCommand.replace(/[^a-z0-9\s-]/gi, '').toLowerCase();
         
@@ -1111,7 +984,6 @@ function addTerminalLine(text, type = 'text') {
     line.className = 'terminal-line';
     
     if (type === 'command') {
-        // Prevenir XSS usando textContent
         const prompt = document.createElement('span');
         prompt.className = 'terminal-prompt';
         prompt.textContent = 'brandon@portfolio:~$ ';
@@ -1126,8 +998,7 @@ function addTerminalLine(text, type = 'text') {
         const className = type === 'error' ? 'terminal-error' : type === 'success' ? 'terminal-success' : 'terminal-text';
         const span = document.createElement('span');
         span.className = className;
-        
-        // Convertir saltos de línea de forma segura
+
         const lines = text.split('\n');
         lines.forEach((lineText, index) => {
             const textNode = document.createTextNode(lineText);
@@ -1143,9 +1014,6 @@ function addTerminalLine(text, type = 'text') {
     terminalOutput.appendChild(line);
 }
 
-// ===================================
-// TILT EFFECT EN CARDS
-// ===================================
 const tiltCards = document.querySelectorAll('.skill-card, .project-card, .hobby-card');
 
 tiltCards.forEach(card => {
@@ -1170,12 +1038,6 @@ tiltCards.forEach(card => {
     });
 });
 
-// ===================================
-// FUTURISTIC EFFECTS IMPLEMENTATION
-// ===================================
-
-// 1. LAVA LAMP BACKGROUND
-// ===================================
 const blobCanvas = document.getElementById('blobMorph');
 if (blobCanvas) {
     const blobCtx = blobCanvas.getContext('2d');
@@ -1205,8 +1067,8 @@ if (blobCanvas) {
                 x: Math.random() * blobCanvas.width,
                 y: blobCanvas.height + Math.random() * 200,
                 radius: Math.random() * 80 + 60,
-                vy: -(Math.random() * 0.5 + 0.4), // Movimiento hacia arriba más rápido
-                vx: (Math.random() - 0.5) * 0.5, // Movimiento horizontal más rápido
+                vy: -(Math.random() * 0.5 + 0.4), 
+                vx: (Math.random() - 0.5) * 0.5, 
                 color: colors[i],
                 phase: Math.random() * Math.PI * 2,
                 wobbleSpeed: Math.random() * 0.03 + 0.02
@@ -1233,20 +1095,16 @@ if (blobCanvas) {
         blobCtx.clearRect(0, 0, blobCanvas.width, blobCanvas.height);
         
         lavaBlobs.forEach(blob => {
-            // Movimiento vertical (subir)
             blob.y += blob.vy;
             
-            // Movimiento horizontal con wobble
             blob.phase += blob.wobbleSpeed;
             blob.x += Math.sin(blob.phase) * 0.5 + blob.vx;
             
-            // Cuando llega arriba, reinicia abajo
             if (blob.y < -blob.radius - 100) {
                 blob.y = blobCanvas.height + blob.radius;
                 blob.x = Math.random() * blobCanvas.width;
             }
             
-            // Mantener dentro de los límites horizontales
             if (blob.x < -blob.radius) blob.x = blobCanvas.width + blob.radius;
             if (blob.x > blobCanvas.width + blob.radius) blob.x = -blob.radius;
             
@@ -1261,8 +1119,6 @@ if (blobCanvas) {
     animateBlobs();
 }
 
-// 2. CURSOR PARTICLES
-// ===================================
 const particleCanvas = document.getElementById('cursorParticles');
 if (particleCanvas) {
     const pCtx = particleCanvas.getContext('2d');
@@ -1299,7 +1155,6 @@ if (particleCanvas) {
             pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             pCtx.fill();
             
-            // Glow effect
             const gradient = pCtx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
             gradient.addColorStop(0, this.color.replace(/[\d.]+\)$/, `${this.life * 0.5})`));
             gradient.addColorStop(1, this.color.replace(/[\d.]+\)$/, '0)'));
@@ -1313,7 +1168,6 @@ if (particleCanvas) {
     function animateParticles() {
         pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
         
-        // Create new particles at mouse position (limitar cantidad)
         const maxParticles = window.innerWidth > 768 ? 100 : 50;
         if (particles.length < maxParticles) {
             particles.push(new Particle(mouse.x, mouse.y));
@@ -1357,9 +1211,6 @@ if (particleCanvas) {
     animateParticles();
 }
 
-
-// 4. SHAKE TO RANDOMIZE THEME
-// ===================================
 let shakeDetectionEnabled = true;
 let lastShakeTime = 0;
 const shakeThreshold = 15;
@@ -1390,26 +1241,22 @@ if (window.DeviceMotionEvent) {
     });
 }
 
-// Fallback: Triple click to randomize (for desktop)
 let clickCount = 0;
 let clickTimer = null;
 
 document.addEventListener('click', (e) => {
     clickCount++;
-    console.log(`Click ${clickCount}/3`);
     
     if (clickCount === 1) {
         clickTimer = setTimeout(() => {
-            console.log('Reset click counter');
             clickCount = 0;
-        }, 500); // Aumentado a 500ms para dar más tiempo
+        }, 500);
     } else if (clickCount === 3) {
         clearTimeout(clickTimer);
         clickCount = 0;
-        console.log('🎨 Triple click detectado!');
         randomizeTheme();
     }
-}, true); // Usar capture phase para asegurar que se ejecute
+}, true); 
 
 function randomizeTheme() {
     const colors = [
@@ -1446,9 +1293,6 @@ function showNotification(message) {
 
 console.log('✨ Futuristic effects loaded! Shake device or triple-click to randomize theme!');
 
-// ===================================
-// PERFORMANCE OPTIMIZATION
-// ===================================
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.style.setProperty('--transition-fast', '0s');
     document.documentElement.style.setProperty('--transition-normal', '0s');
