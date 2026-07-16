@@ -229,15 +229,20 @@ const navMenu = document.getElementById('nav-menu');
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('section[id]');
 
+let isNavbarScrolled = false;
 function scrollHeader() {
-    if (window.scrollY >= 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+    const shouldScroll = window.scrollY >= 50;
+    if (shouldScroll !== isNavbarScrolled) {
+        isNavbarScrolled = shouldScroll;
+        if (isNavbarScrolled) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
     }
 }
 
-window.addEventListener('scroll', throttle(scrollHeader, 10));
+window.addEventListener('scroll', throttle(scrollHeader, 50));
 
 navToggle.addEventListener('click', () => {
     navMenu.classList.toggle('active');
@@ -251,18 +256,32 @@ navLinks.forEach(link => {
     });
 });
 
+let sectionPositions = [];
+function updateSectionPositions() {
+    sectionPositions = Array.from(sections).map(section => {
+        const id = section.getAttribute('id');
+        return {
+            element: section,
+            id: id,
+            navLink: document.querySelector('.nav-link[href*=' + id + ']'),
+            top: section.offsetTop - 100,
+            height: section.offsetHeight
+        };
+    });
+}
+
+// Inicializar posiciones de secciones
+updateSectionPositions();
+window.addEventListener('resize', debounce(updateSectionPositions, 250));
+
 function scrollActive() {
     const scrollY = window.pageYOffset;
 
-    sections.forEach(section => {
-        const sectionHeight = section.offsetHeight;
-        const sectionTop = section.offsetTop - 100;
-        const sectionId = section.getAttribute('id');
-        
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            document.querySelector('.nav-link[href*=' + sectionId + ']')?.classList.add('active');
+    sectionPositions.forEach(sec => {
+        if (scrollY > sec.top && scrollY <= sec.top + sec.height) {
+            sec.navLink?.classList.add('active');
         } else {
-            document.querySelector('.nav-link[href*=' + sectionId + ']')?.classList.remove('active');
+            sec.navLink?.classList.remove('active');
         }
     });
 }
@@ -422,9 +441,9 @@ function createBackToTop() {
 
 createBackToTop();
 
+const parallaxElements = document.querySelectorAll('.floating-shape');
 window.addEventListener('scroll', throttle(() => {
     const scrolled = window.pageYOffset;
-    const parallaxElements = document.querySelectorAll('.floating-shape');
     
     parallaxElements.forEach((el, index) => {
         const speed = (index + 1) * 0.1;
@@ -442,6 +461,7 @@ window.addEventListener('load', () => {
     }
     
     document.body.classList.add('loaded');
+    updateSectionPositions();
 });
 
 
@@ -936,11 +956,11 @@ const terminalOutput = document.getElementById('terminal-output');
 
 const commands = {
     help: 'Comandos disponibles:\n  about - Información sobre mí\n  skills - Mis habilidades\n  projects - Mis proyectos\n  contact - Información de contacto\n  clear - Limpiar terminal\n  social - Redes sociales',
-    about: 'Soy Brandon Jiménez, Full Stack Developer apasionado por crear experiencias web innovadoras.',
-    skills: 'HTML, CSS, JavaScript, React, Node.js, Python, Django, Git, MySQL, MongoDB',
-    projects: 'Proyectos destacados:\n  1. E-commerce Platform\n  2. Task Manager App\n  3. Portfolio Website',
-    contact: 'Email: brandonjimenez.dev@gmail.com\nGitHub: https://github.com/brandonjimenez21\nLinkedIn: https://www.linkedin.com/in/brandon-jimenez-1a124b215/',
-    social: 'GitHub: https://github.com/brandonjimenez21\nLinkedIn: https://www.linkedin.com/in/brandon-jimenez-1a124b215/\nTwitter: @brandonjimenez',
+    about: 'Soy Brandon Jimenez, Full Stack Developer apasionado por crear experiencias web innovadoras.',
+    skills: 'HTML, CSS, JavaScript, React, Node.js, TypeScript, Python, Django, Git, MySQL, MongoDB, Supabase,',
+    projects: 'Proyectos destacados:\n  1. Efisco\n  2. CallForward-Bot v2.0\n  3. Voice.ly\n  4. Stats Prime',
+    contact: 'Email: brandonjimenez.dev@gmail.com\nGitHub: https://github.com/brandonjimenez21\nLinkedIn: https://www.linkedin.com/in/brandon-jimenez-dev/',
+    social: 'GitHub: https://github.com/brandonjimenez21\nLinkedIn: https://www.linkedin.com/in/brandon-jimenez-dev/\nTwitter: @brandonjimenez',
     clear: 'CLEAR'
 };
 
@@ -1178,9 +1198,10 @@ if (particleCanvas) {
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+                const distSq = dx * dx + dy * dy;
                 
-                if (distance < 100) {
+                if (distSq < 10000) {
+                    const distance = Math.sqrt(distSq);
                     const opacity = (1 - distance / 100) * Math.min(particles[i].life, particles[j].life);
                     pCtx.strokeStyle = `rgba(99, 102, 241, ${opacity * 0.2})`;
                     pCtx.lineWidth = 0.5;

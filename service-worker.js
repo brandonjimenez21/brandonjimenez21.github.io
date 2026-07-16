@@ -11,7 +11,7 @@ const urlsToCache = [
     '/assets/favicon.ico',
     '/manifest.json',
     '/assets/fonts/fontawesome.min.css',
-    '/assets/yo.png'
+    '/assets/yo.webp'
 ];
 
 // URLs externas importantes

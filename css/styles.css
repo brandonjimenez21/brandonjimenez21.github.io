@@ -26,8 +26,8 @@
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     
     /* Tipografía */
-    --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
-    --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+    --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
     
     /* Espaciado */
     --spacing-xs: 0.5rem;
@@ -2127,7 +2127,6 @@ body.dark-mode .footer {
 #blobMorph {
     z-index: 2;
     opacity: 0.4;
-    filter: blur(40px);
 }
 
 /* Cursor Particles - Layer 4 (topmost background) */
