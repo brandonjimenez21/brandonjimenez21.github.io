@@ -32,6 +32,7 @@
 3. **Habilidades**: Tecnologías con porcentajes interactivos tooltip
 4. **Estadísticas Animadas**: Contadores con scroll trigger
 5. **Proyectos Destacados**: Portfolio con enlaces y tecnologías
+6. **Certificados**: Galería de certificados con modal para verlos en grande (ver `assets/certificates/README.md` para agregar uno nuevo)
 7. **Hobbies**: Intereses personales con iconos
 8. **Contacto**: Formulario funcional con FormSubmit + redes sociales
 9. **Footer**: Navegación, botón de compartir y contador de visitas

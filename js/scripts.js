@@ -955,7 +955,7 @@ const terminalInput = document.getElementById('terminal-input');
 const terminalOutput = document.getElementById('terminal-output');
 
 const commands = {
-    help: 'Comandos disponibles:\n  about - Información sobre mí\n  skills - Mis habilidades\n  projects - Mis proyectos\n  contact - Información de contacto\n  clear - Limpiar terminal\n  social - Redes sociales',
+    help: 'Comandos disponibles:\n  about - Información sobre mí\n  skills - Mis habilidades\n  projects - Mis proyectos\n  certificates - Mis certificados\n  contact - Información de contacto\n  clear - Limpiar terminal\n  social - Redes sociales',
     about: 'Soy Brandon Jimenez, Full Stack Developer apasionado por crear experiencias web innovadoras.',
     skills: 'HTML, CSS, JavaScript, React, Node.js, TypeScript, Python, Django, Git, MySQL, MongoDB, Supabase,',
     projects: 'Proyectos destacados:\n  1. Efisco\n  2. CallForward-Bot v2.0\n  3. Voice.ly\n  4. Stats Prime',
@@ -1319,5 +1319,163 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.style.setProperty('--transition-normal', '0s');
     document.documentElement.style.setProperty('--transition-slow', '0s');
 }
+
+/* ===================================
+   CERTIFICADOS
+   ===================================
+   Para agregar un certificado nuevo:
+   1. Copia el archivo (imagen o PDF) a assets/certificates/
+   2. Agrega un objeto a certificatesData con esa ruta
+   Campos: title/issuer/date son {es, en} (texto en ambos idiomas),
+   image (miniatura a mostrar, usa la misma imagen si es JPG/PNG), file
+   (archivo que se abre al hacer clic en "Ver / Descargar", puede ser el
+   mismo que image o un PDF) */
+const certificatesData = [
+    {
+        title: { es: 'DS4A / Colombia - Fundamentos en Analítica de Datos', en: 'DS4A / Colombia - Data Analytics Fundamentals' },
+        issuer: { es: 'MinTIC + Correlation One', en: 'MinTIC + Correlation One' },
+        date: { es: 'Dic 2022', en: 'Dec 2022' },
+        image: 'assets/certificates/ds4a-analitica-de-datos.jpg',
+        file: 'assets/certificates/ds4a-analitica-de-datos.jpg'
+    },
+    {
+        title: { es: 'Fundamentos de Programación (JavaScript y Node.js)', en: 'Programming Fundamentals (JavaScript and Node.js)' },
+        issuer: { es: 'MisiónTIC 2022 - Gobierno de Colombia + Universidad de Pamplona', en: 'MisiónTIC 2022 - Government of Colombia + Universidad de Pamplona' },
+        date: { es: 'Dic 2020', en: 'Dec 2020' },
+        image: 'assets/certificates/misiontic2022-fundamentos-programacion.jpg',
+        file: 'assets/certificates/misiontic2022-fundamentos-programacion.jpg'
+    },
+    {
+        title: { es: 'Desarrollo Web con PHP', en: 'Web Development with PHP' },
+        issuer: { es: 'SENA', en: 'SENA' },
+        date: { es: 'Oct 2021', en: 'Oct 2021' },
+        image: 'assets/certificates/sena-desarrollo-web-php.jpg',
+        file: 'assets/certificates/sena-desarrollo-web-php.jpg'
+    },
+    {
+        title: { es: 'Técnico en Programación de Software', en: 'Technical Degree in Software Programming' },
+        issuer: { es: 'SENA', en: 'SENA' },
+        date: { es: 'Dic 2021', en: 'Dec 2021' },
+        image: 'assets/certificates/sena-titulo-tecnico-programacion.jpg',
+        file: 'assets/certificates/sena-titulo-tecnico-programacion.jpg'
+    },
+];
+
+commands.certificates = certificatesData.length
+    ? certificatesData.map(c => `  • ${c.title.es} — ${c.issuer.es} (${c.date.es})`).join('\n')
+    : 'Aún no hay certificados publicados.';
+
+function renderCertificates() {
+    const grid = document.getElementById('certificates-grid');
+    const emptyMsg = document.getElementById('certificates-empty');
+    if (!grid) return;
+
+    if (!certificatesData.length) {
+        grid.hidden = true;
+        if (emptyMsg) emptyMsg.hidden = false;
+        return;
+    }
+
+    grid.hidden = false;
+    if (emptyMsg) emptyMsg.hidden = true;
+
+    const lang = currentLang === 'en' ? 'en' : 'es';
+
+    grid.innerHTML = certificatesData.map((cert, index) => {
+        const isPdf = /\.pdf$/i.test(cert.file || cert.image || '');
+        const thumb = cert.image
+            ? `<img src="${cert.image}" alt="${cert.title[lang]}" loading="lazy">`
+            : `<div class="certificate-thumb-icon"><i class="fas fa-file-${isPdf ? 'pdf' : 'certificate'}"></i></div>`;
+
+        return `
+            <button type="button" class="certificate-card" data-index="${index}" aria-label="Ver certificado: ${cert.title[lang]}">
+                <div class="certificate-thumb">
+                    ${thumb}
+                    <div class="certificate-thumb-overlay">
+                        <i class="fas fa-search-plus"></i>
+                        <span data-es="Ver certificado" data-en="View certificate">Ver certificado</span>
+                    </div>
+                </div>
+                <div class="certificate-info">
+                    <h3 data-es="${cert.title.es}" data-en="${cert.title.en}">${cert.title[lang]}</h3>
+                    <p class="certificate-issuer" data-es="${cert.issuer.es}" data-en="${cert.issuer.en}">${cert.issuer[lang]}</p>
+                    <p class="certificate-date" data-es="${cert.date.es}" data-en="${cert.date.en}">${cert.date[lang]}</p>
+                </div>
+            </button>
+        `;
+    }).join('');
+
+    grid.querySelectorAll('.certificate-card').forEach(card => {
+        card.addEventListener('click', () => {
+            openCertificateModal(certificatesData[Number(card.dataset.index)]);
+        });
+
+        if (typeof observer !== 'undefined') observer.observe(card);
+
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const rotateX = ((e.clientY - rect.top - rect.height / 2) / (rect.height / 2)) * -10;
+            const rotateY = ((e.clientX - rect.left - rect.width / 2) / (rect.width / 2)) * 10;
+            card.style.setProperty('--rotate-x', `${rotateX}deg`);
+            card.style.setProperty('--rotate-y', `${rotateY}deg`);
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.setProperty('--rotate-x', '0deg');
+            card.style.setProperty('--rotate-y', '0deg');
+        });
+    });
+}
+
+function openCertificateModal(cert) {
+    const modal = document.getElementById('certificate-modal');
+    const img = document.getElementById('certificate-modal-img');
+    const title = document.getElementById('certificate-modal-title');
+    const meta = document.getElementById('certificate-modal-meta');
+    const download = document.getElementById('certificate-modal-download');
+    if (!modal || !cert) return;
+
+    const lang = currentLang === 'en' ? 'en' : 'es';
+    const metaEs = `${cert.issuer.es} · ${cert.date.es}`;
+    const metaEn = `${cert.issuer.en} · ${cert.date.en}`;
+
+    img.src = cert.image || cert.file || '';
+    img.alt = cert.title[lang];
+    img.hidden = !cert.image;
+
+    title.textContent = cert.title[lang];
+    title.setAttribute('data-es', cert.title.es);
+    title.setAttribute('data-en', cert.title.en);
+
+    meta.textContent = lang === 'en' ? metaEn : metaEs;
+    meta.setAttribute('data-es', metaEs);
+    meta.setAttribute('data-en', metaEn);
+
+    download.href = cert.file || cert.image || '#';
+
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCertificateModal() {
+    const modal = document.getElementById('certificate-modal');
+    if (!modal) return;
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
+const certificateModalClose = document.getElementById('certificate-modal-close');
+const certificateModalOverlay = document.getElementById('certificate-modal-overlay');
+
+if (certificateModalClose) certificateModalClose.addEventListener('click', closeCertificateModal);
+if (certificateModalOverlay) certificateModalOverlay.addEventListener('click', closeCertificateModal);
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCertificateModal();
+});
+
+renderCertificates();
 
 console.log('✅ Portafolio cargado correctamente');

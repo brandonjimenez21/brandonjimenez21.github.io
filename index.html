@@ -51,6 +51,7 @@
                     <li><a href="#about" class="nav-link" data-en="About">Sobre Mí</a></li>
                     <li><a href="#skills" class="nav-link" data-en="Skills">Habilidades</a></li>
                     <li><a href="#projects" class="nav-link" data-en="Projects">Proyectos</a></li>
+                    <li><a href="#certificates" class="nav-link" data-en="Certificates">Certificados</a></li>
                     <li><a href="#contact" class="nav-link" data-en="Contact">Contacto</a></li>
                 </ul>
             </div>
@@ -414,6 +415,39 @@
         </div>
     </section>
 
+    <section id="certificates" class="certificates section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-es="Certificados" data-en="Certificates">Certificados</h2>
+                <p class="section-subtitle" data-es="Cursos y certificaciones que he completado" data-en="Courses and certifications I've completed">Cursos y certificaciones que he completado</p>
+            </div>
+
+            <div class="certificates-grid" id="certificates-grid">
+                <!-- Generado dinámicamente por js/scripts.js a partir de certificatesData -->
+            </div>
+
+            <p class="certificates-empty" id="certificates-empty" hidden data-es="Aún no hay certificados publicados. ¡Vuelve pronto!" data-en="No certificates published yet. Check back soon!">Aún no hay certificados publicados. ¡Vuelve pronto!</p>
+        </div>
+    </section>
+
+    <div class="certificate-modal" id="certificate-modal" aria-hidden="true">
+        <div class="certificate-modal-overlay" id="certificate-modal-overlay"></div>
+        <div class="certificate-modal-content">
+            <button class="certificate-modal-close" id="certificate-modal-close" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <img class="certificate-modal-img" id="certificate-modal-img" src="" alt="">
+            <div class="certificate-modal-info">
+                <h3 id="certificate-modal-title"></h3>
+                <p id="certificate-modal-meta"></p>
+                <a id="certificate-modal-download" class="btn btn-secondary" href="" target="_blank" rel="noopener noreferrer">
+                    <span data-es="Ver / Descargar" data-en="View / Download">Ver / Descargar</span>
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <section id="hobbies" class="hobbies section">
         <div class="container">
             <div class="section-header">
@@ -572,6 +606,7 @@
                         <li><a href="#about" data-es="Sobre Mí" data-en="About">Sobre Mí</a></li>
                         <li><a href="#skills" data-es="Habilidades" data-en="Skills">Habilidades</a></li>
                         <li><a href="#projects" data-es="Proyectos" data-en="Projects">Proyectos</a></li>
+                        <li><a href="#certificates" data-es="Certificados" data-en="Certificates">Certificados</a></li>
                         <li><a href="#contact" data-es="Contacto" data-en="Contact">Contacto</a></li>
                     </ul>
                 </div>

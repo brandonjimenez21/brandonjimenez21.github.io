@@ -1245,6 +1245,215 @@ body.dark-mode .matrix-preloader {
 }
 
 /* ===================================
+   CERTIFICATES SECTION
+   =================================== */
+.certificates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.certificates-grid[hidden] {
+    display: none;
+}
+
+.certificate-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    border: none;
+    text-align: left;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+.certificate-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.certificate-thumb {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    background: var(--bg-secondary);
+}
+
+.certificate-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+}
+
+.certificate-card:hover .certificate-thumb img {
+    transform: scale(1.08);
+}
+
+.certificate-thumb-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    background: var(--bg-secondary);
+}
+
+.certificate-thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(99, 102, 241, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: var(--transition-normal);
+}
+
+.certificate-card:hover .certificate-thumb-overlay {
+    opacity: 1;
+}
+
+.certificate-info {
+    padding: var(--spacing-md);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.certificate-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+}
+
+.certificate-issuer {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.certificate-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.certificates-empty {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-lg);
+}
+
+body.dark-mode .certificate-card {
+    background: var(--bg-secondary);
+}
+
+body.dark-mode .certificate-thumb,
+body.dark-mode .certificate-thumb-icon {
+    background: var(--bg-primary);
+}
+
+/* Modal de certificado */
+.certificate-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+}
+
+.certificate-modal.active {
+    display: flex;
+}
+
+.certificate-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(4px);
+}
+
+.certificate-modal-content {
+    position: relative;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+    z-index: 1;
+}
+
+.certificate-modal-close {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-fast);
+    z-index: 2;
+}
+
+.certificate-modal-close:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.certificate-modal-img {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    background: var(--bg-secondary);
+    display: block;
+}
+
+.certificate-modal-img[hidden] {
+    display: none;
+}
+
+.certificate-modal-info {
+    padding: var(--spacing-lg);
+}
+
+.certificate-modal-info h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.certificate-modal-info p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+/* ===================================
    CONTACT SECTION
    =================================== */
 .contact-content {
